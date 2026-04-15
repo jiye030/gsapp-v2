@@ -1,0 +1,3048 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <title>사업영역 · DATA VIEW &lt; GS건설</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --black:#111111; --dark:#1A1A1A; --mid:#666666;
+  --light:#999999; --lighter:#BBBBBB; --border:#E0E0DE;
+  --off-white:#F6F6F4; --white:#FFFFFF; --logo-green:#006B3C;
+  --grid-line:rgba(0,0,0,0.04);
+  --grid-line-dark:rgba(255,255,255,0.06);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{
+  font-family:'Noto Sans KR',sans-serif;
+  background:var(--off-white);
+  color:var(--black);
+  overflow-x:hidden;
+}
+
+/* ═══════════════════════════════
+   DATA-TONE UTILITIES
+═══════════════════════════════ */
+.mono{font-family:'JetBrains Mono',monospace}
+.label-micro{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:400;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--mid);
+}
+.label-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;
+  letter-spacing:0.1em;
+  color:var(--light);
+}
+.live-dot{
+  display:inline-block;width:6px;height:6px;
+  background:var(--black);border-radius:50%;
+  margin-right:8px;position:relative;
+  animation:pulse 1.6s ease-in-out infinite;
+}
+.live-dot.on-dark{background:var(--white)}
+@keyframes pulse{
+  0%,100%{opacity:0.35;transform:scale(0.85)}
+  50%{opacity:1;transform:scale(1.1)}
+}
+.live-dot::after{
+  content:'';position:absolute;inset:-3px;
+  border-radius:50%;border:1px solid currentColor;
+  opacity:0;animation:ring 1.6s ease-out infinite;
+}
+@keyframes ring{
+  0%{opacity:0.5;transform:scale(0.7)}
+  100%{opacity:0;transform:scale(2.2)}
+}
+
+/* ─── PAGE SYSTEM ─── */
+.page{display:none}
+.page.active{display:block}
+
+/* ═══════════════════════════════
+   GNB (v11 동일)
+═══════════════════════════════ */
+.gnb-wrap{position:fixed;top:0;left:0;right:0;z-index:1000}
+.gnb{
+  height:64px;display:flex;align-items:center;padding:0 44px;
+  background:transparent;
+  border-bottom:1px solid transparent;
+  transition:background 0.4s ease,border-color 0.4s ease;
+  position:relative;
+}
+.gnb.scrolled{
+  background:rgba(18,24,28,0.88);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom-color:rgba(255,255,255,0.06);
+}
+.gnb.light-text .gnb-logo-text,
+.gnb.light-text .gnb-nav>li>a{color:rgba(255,255,255,0.88)}
+.gnb.dark-text .gnb-logo-text,
+.gnb.dark-text .gnb-nav>li>a{color:rgba(0,0,0,0.82)}
+.gnb.light-text .gnb-icon svg{stroke:rgba(255,255,255,0.82)}
+.gnb.dark-text .gnb-icon svg{stroke:rgba(0,0,0,0.72)}
+.gnb.light-text .gnb-nav>li>a:hover{color:white}
+.gnb.dark-text .gnb-nav>li>a:hover{color:black}
+
+.gnb-logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;text-decoration:none;transition:opacity 0.2s}
+.gnb-logo:hover{opacity:0.82}
+.gnb-logo-mark{width:34px;height:34px;flex-shrink:0}
+.gnb-logo-text{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:15px;font-weight:700;
+  color:white;letter-spacing:0.5px;
+  transition:color 0.3s;
+}
+.gnb-nav{display:flex;gap:0;list-style:none;margin:0 auto}
+.gnb-nav>li{position:relative}
+.gnb-nav>li>a{
+  display:block;
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:12.5px;font-weight:400;
+  color:rgba(255,255,255,0.88);text-decoration:none;
+  letter-spacing:0.2px;white-space:nowrap;
+  padding:0 16px;line-height:64px;
+  transition:color 0.2s;
+}
+.gnb-nav>li>a:hover,
+.gnb-nav>li>a.active{color:white;font-weight:500}
+.gnb-drop{
+  display:none;position:absolute;top:64px;left:50%;
+  transform:translateX(-50%);
+  background:rgba(18,24,28,0.95);
+  backdrop-filter:blur(12px);
+  border-top:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 16px 40px rgba(0,0,0,0.4);
+  min-width:152px;padding:10px 0;z-index:999;
+}
+.gnb-nav>li:hover>.gnb-drop{display:block}
+.gnb-drop a{
+  display:block;font-family:'Noto Sans KR',sans-serif;
+  font-size:12px;font-weight:300;
+  color:rgba(255,255,255,0.65);text-decoration:none;
+  padding:8px 20px;white-space:nowrap;
+  transition:color 0.15s,background 0.15s;
+}
+.gnb-drop a:hover{color:white;background:rgba(255,255,255,0.05)}
+.gnb-icons{display:flex;gap:4px;align-items:center;flex-shrink:0}
+.gnb-icon{
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  background:none;border:none;cursor:pointer;
+}
+.gnb-icon svg{
+  width:19px;height:19px;
+  stroke:rgba(255,255,255,0.82);fill:none;stroke-width:1.5;
+  transition:stroke 0.2s;
+}
+.gnb-icon:hover svg{stroke:white}
+
+/* ═══════════════════════════════
+   PAGE 1 — 사업영역 DATA VIEW
+═══════════════════════════════ */
+
+/* ─── HERO ─── */
+.biz-hero{
+  min-height:100dvh;position:relative;overflow:hidden;
+  background:var(--dark);color:var(--white);
+}
+.biz-hero-bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1920&q=80') center/cover;
+  animation:heroZoom 18s ease forwards;
+}
+.biz-hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(10,10,10,0.7) 0%,rgba(10,10,10,0.35) 40%,rgba(10,10,10,0.85) 100%),
+    linear-gradient(90deg,rgba(10,10,10,0.6) 0%,rgba(10,10,10,0) 50%);
+}
+@keyframes heroZoom{
+  from{transform:scale(1.08)}
+  to{transform:scale(1.0)}
+}
+
+/* Hero grid overlay (blueprint-ish) */
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);
+  background-size:80px 80px;
+  pointer-events:none;
+}
+.hero-grid::before,.hero-grid::after{
+  content:'';position:absolute;background:rgba(255,255,255,0.2);
+}
+.hero-grid::before{top:80px;left:0;right:0;height:1px}
+.hero-grid::after{bottom:80px;left:0;right:0;height:1px}
+
+.hero-meta-tl{
+  position:absolute;top:88px;left:80px;z-index:2;
+  display:flex;flex-direction:column;gap:6px;
+}
+.hero-meta-tl .m1{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.15em;
+  color:rgba(255,255,255,0.95);text-transform:uppercase;
+  display:flex;align-items:center;
+}
+.hero-meta-tl .m2{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:300;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.5);
+}
+
+.hero-meta-tr{
+  position:absolute;top:88px;right:80px;z-index:2;
+  text-align:right;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:300;
+  color:rgba(255,255,255,0.55);
+  letter-spacing:0.1em;line-height:1.9;
+}
+.hero-meta-tr .coord{color:rgba(255,255,255,0.85);font-weight:500}
+
+.biz-hero-content{
+  position:absolute;left:80px;right:80px;bottom:180px;z-index:2;
+}
+.biz-hero-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:500;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(255,255,255,0.55);
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:30px;
+}
+.biz-hero-eyebrow::before{
+  content:'';display:inline-block;
+  width:42px;height:1px;background:rgba(255,255,255,0.45);
+}
+.biz-hero-title{
+  font-family:'Titillium Web',sans-serif;
+  font-size:clamp(88px,11vw,168px);
+  font-weight:700;line-height:0.88;letter-spacing:-0.02em;
+  color:white;
+  animation:fadeUp 0.9s 0.3s ease both;
+}
+.biz-hero-title .t-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.22em;font-weight:400;
+  letter-spacing:0.15em;
+  color:rgba(255,255,255,0.4);
+  vertical-align:super;margin-left:14px;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(28px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* Ticker */
+.biz-hero-ticker{
+  position:absolute;left:0;right:0;bottom:0;z-index:3;
+  height:60px;
+  border-top:1px solid rgba(255,255,255,0.12);
+  background:rgba(8,8,8,0.5);
+  backdrop-filter:blur(10px);
+  display:flex;align-items:center;
+  overflow:hidden;
+}
+.ticker-label{
+  flex-shrink:0;padding:0 28px;
+  height:100%;display:flex;align-items:center;gap:10px;
+  background:var(--white);color:var(--black);
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:600;letter-spacing:0.15em;
+  text-transform:uppercase;
+}
+.ticker-track{
+  flex:1;overflow:hidden;position:relative;height:100%;
+}
+.ticker-inner{
+  display:flex;align-items:center;height:100%;
+  animation:tickerScroll 48s linear infinite;
+  white-space:nowrap;
+  color:rgba(255,255,255,0.85);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:400;letter-spacing:0.08em;
+}
+.ticker-inner span{padding:0 26px;display:inline-flex;align-items:center;gap:8px}
+.ticker-inner span em{color:rgba(255,255,255,0.45);font-style:normal;margin-right:6px}
+.ticker-inner span b{color:white;font-weight:600}
+.ticker-sep{color:rgba(255,255,255,0.2)}
+@keyframes tickerScroll{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+
+/* ═══════════════════════════════
+   BIZ INDEX — DATA TABLE NAV
+═══════════════════════════════ */
+.biz-index{
+  background:var(--off-white);
+  padding:120px 80px 140px;
+  position:relative;
+}
+.biz-index-hd{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:60px;align-items:end;
+  margin-bottom:80px;
+}
+.biz-index-hd .hd-left .sec-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--mid);
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:22px;
+}
+.biz-index-hd .hd-left .sec-tag::before{
+  content:'';width:36px;height:1px;background:var(--black);
+}
+.biz-index-hd h2{
+  font-family:'Titillium Web',sans-serif;
+  font-size:clamp(52px,5.6vw,78px);
+  font-weight:700;line-height:0.92;letter-spacing:-0.02em;
+  color:var(--black);
+}
+.biz-index-hd h2 .accent{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.32em;font-weight:400;
+  color:var(--light);
+  letter-spacing:0.1em;
+}
+.biz-index-hd .hd-right{
+  display:flex;flex-direction:column;gap:20px;align-items:flex-end;
+}
+.biz-index-hd .hd-right p{
+  font-size:13px;font-weight:300;line-height:1.9;
+  color:var(--mid);text-align:right;max-width:340px;
+}
+.biz-index-hd .hd-right .sort-meta{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.1em;
+  color:var(--light);text-transform:uppercase;
+  display:flex;gap:18px;
+}
+.biz-index-hd .hd-right .sort-meta span::before{content:'▸ ';color:var(--lighter)}
+
+/* Table header */
+.biz-table{
+  border-top:1px solid var(--black);
+  position:relative;
+}
+.biz-table-head{
+  display:grid;
+  grid-template-columns:80px 180px 1fr 200px 180px 80px;
+  gap:24px;padding:16px 8px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:500;
+  letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--light);
+  border-bottom:1px solid var(--border);
+}
+
+/* Rows */
+.biz-row{
+  display:grid;
+  grid-template-columns:80px 180px 1fr 200px 180px 80px;
+  gap:24px;padding:32px 8px;
+  align-items:center;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition:background 0.3s ease,padding 0.35s ease;
+  position:relative;
+}
+.biz-row::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:0;background:var(--black);
+  transition:width 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.biz-row:hover{padding-left:24px;background:rgba(0,0,0,0.015)}
+.biz-row:hover::before{width:3px}
+
+.biz-row .br-idx{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;font-weight:500;
+  color:var(--black);letter-spacing:0.05em;
+}
+.biz-row .br-code{
+  font-family:'Titillium Web',sans-serif;
+  font-size:22px;font-weight:700;letter-spacing:0.02em;
+  color:var(--black);
+}
+.biz-row .br-name{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:18px;font-weight:500;color:var(--black);
+  display:flex;flex-direction:column;gap:4px;
+}
+.biz-row .br-name .sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:300;
+  color:var(--mid);letter-spacing:0.05em;
+}
+.biz-row .br-regions{
+  display:flex;flex-wrap:wrap;gap:6px;
+}
+.biz-row .br-regions .chip{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:500;
+  padding:4px 8px;
+  border:1px solid var(--border);
+  color:var(--mid);letter-spacing:0.08em;
+  text-transform:uppercase;
+  transition:border-color 0.25s,color 0.25s;
+}
+.biz-row:hover .br-regions .chip{border-color:var(--black);color:var(--black)}
+.biz-row .br-status{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:400;letter-spacing:0.1em;
+  color:var(--mid);display:flex;align-items:center;
+}
+.biz-row .br-arrow{
+  justify-self:end;
+  width:44px;height:44px;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.3s;
+}
+.biz-row .br-arrow svg{
+  width:18px;height:18px;stroke:var(--black);
+  stroke-width:1.5;fill:none;
+  transition:transform 0.3s;
+}
+.biz-row:hover .br-arrow{background:var(--black);border-color:var(--black)}
+.biz-row:hover .br-arrow svg{stroke:var(--white);transform:translateX(2px)}
+
+/* Cursor-following preview */
+.biz-preview{
+  position:fixed;
+  width:260px;height:180px;
+  pointer-events:none;
+  z-index:50;
+  opacity:0;
+  transform:translate(-50%,-50%) scale(0.92);
+  transition:opacity 0.25s ease,transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+  overflow:hidden;
+  box-shadow:0 24px 60px rgba(0,0,0,0.25);
+}
+.biz-preview.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.biz-preview img{
+  width:100%;height:100%;object-fit:cover;
+  filter:grayscale(20%) contrast(1.05);
+}
+.biz-preview::after{
+  content:attr(data-label);
+  position:absolute;left:12px;bottom:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:500;letter-spacing:0.15em;
+  color:white;text-transform:uppercase;
+  background:rgba(0,0,0,0.5);
+  padding:4px 8px;
+}
+
+/* ═══════════════════════════════
+   LIVE METRICS DASHBOARD
+═══════════════════════════════ */
+.live-metrics{
+  background:var(--dark);color:var(--white);
+  padding:120px 80px 140px;
+  position:relative;overflow:hidden;
+}
+.live-metrics::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+}
+.live-metrics-hd{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:80px;position:relative;
+}
+.live-metrics-hd .lm-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(255,255,255,0.5);
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:22px;
+}
+.live-metrics-hd .lm-eyebrow::before{
+  content:'';width:36px;height:1px;background:rgba(255,255,255,0.45);
+}
+.live-metrics-hd h2{
+  font-family:'Titillium Web',sans-serif;
+  font-size:clamp(44px,4.6vw,64px);
+  font-weight:700;line-height:0.95;letter-spacing:-0.01em;
+  color:var(--white);
+}
+.live-metrics-hd .lm-stamp{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.45);text-align:right;
+}
+.live-metrics-hd .lm-stamp .upd{color:rgba(255,255,255,0.85);display:block;margin-bottom:6px}
+
+.lm-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;position:relative;
+  border-top:1px solid rgba(255,255,255,0.15);
+}
+.lm-card{
+  padding:40px 32px 32px;
+  border-right:1px solid rgba(255,255,255,0.08);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  position:relative;min-height:260px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  transition:background 0.3s;
+}
+.lm-card:hover{background:rgba(255,255,255,0.02)}
+.lm-card:last-child{border-right:none}
+.lm-card .lm-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+}
+.lm-card .lm-k{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.15em;
+  color:rgba(255,255,255,0.55);text-transform:uppercase;
+}
+.lm-card .lm-idx{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:rgba(255,255,255,0.35);
+}
+.lm-card .lm-big{
+  font-family:'Titillium Web',sans-serif;
+  font-size:56px;font-weight:700;line-height:1;
+  color:var(--white);letter-spacing:-0.02em;
+}
+.lm-card .lm-unit{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;font-weight:400;
+  color:rgba(255,255,255,0.55);
+  margin-left:6px;
+}
+.lm-card .lm-sub{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:12px;font-weight:300;
+  color:rgba(255,255,255,0.55);
+  line-height:1.7;
+}
+.lm-card .lm-spark{
+  width:100%;height:36px;margin:8px 0 0;
+  opacity:0.75;
+}
+.lm-card .lm-spark path{
+  stroke:var(--white);stroke-width:1.2;fill:none;
+}
+.lm-card .lm-spark path.area{
+  fill:rgba(255,255,255,0.06);stroke:none;
+}
+
+/* ═══════════════════════════════
+   FEATURED PROJECT SPEC CARD
+═══════════════════════════════ */
+.featured-proj{
+  background:var(--off-white);
+  padding:120px 80px 140px;
+}
+.fp-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--mid);
+  display:flex;align-items:center;gap:12px;margin-bottom:22px;
+}
+.fp-eyebrow::before{content:'';width:36px;height:1px;background:var(--black)}
+.fp-heading{
+  font-family:'Titillium Web',sans-serif;
+  font-size:clamp(44px,4.6vw,64px);
+  font-weight:700;line-height:0.95;letter-spacing:-0.01em;
+  color:var(--black);margin-bottom:60px;
+}
+.fp-card{
+  display:grid;grid-template-columns:1.2fr 1fr;
+  border:1px solid var(--black);
+  background:var(--white);
+  cursor:pointer;transition:transform 0.4s;
+}
+.fp-card:hover{transform:translate(-4px,-4px);box-shadow:8px 8px 0 var(--black)}
+.fp-img{
+  position:relative;overflow:hidden;min-height:480px;
+  background:url('https://images.pexels.com/photos/10407689/pexels-photo-10407689.jpeg?auto=compress&cs=tinysrgb&w=1400&h=1000&fit=crop') center/cover;
+  filter:grayscale(15%);
+}
+.fp-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,0,0,0.2) 0%,rgba(0,0,0,0.55) 100%);
+}
+.fp-img-meta{
+  position:absolute;inset:0;padding:32px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  color:white;z-index:2;
+}
+.fp-img-meta .im-top{
+  display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.15em;
+  text-transform:uppercase;color:rgba(255,255,255,0.85);
+}
+.fp-img-meta .im-code{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:600;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.75);
+}
+.fp-info{
+  padding:48px 44px;display:flex;flex-direction:column;
+  justify-content:space-between;
+}
+.fp-info .fi-top h3{
+  font-family:'Titillium Web',sans-serif;
+  font-size:32px;font-weight:700;line-height:1.15;
+  letter-spacing:-0.01em;color:var(--black);
+  margin-bottom:12px;
+}
+.fp-info .fi-top .fi-kr{
+  font-size:13px;font-weight:400;color:var(--mid);
+  margin-bottom:32px;
+}
+.fp-specs{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:20px 28px;margin-bottom:40px;
+}
+.fp-spec-row{
+  border-top:1px solid var(--border);padding-top:12px;
+}
+.fp-spec-row .sk{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:500;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--light);
+  display:block;margin-bottom:6px;
+}
+.fp-spec-row .sv{
+  font-size:13.5px;font-weight:500;color:var(--black);
+}
+.fp-cta{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:28px;border-top:1px solid var(--black);
+}
+.fp-cta .fcta-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:500;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--black);
+}
+.fp-cta .fcta-arrow{
+  width:44px;height:44px;background:var(--black);
+  display:flex;align-items:center;justify-content:center;
+}
+.fp-cta .fcta-arrow svg{
+  width:18px;height:18px;stroke:white;stroke-width:1.5;fill:none;
+  transition:transform 0.3s;
+}
+.fp-card:hover .fcta-arrow svg{transform:translateX(3px)}
+
+/* ═══════════════════════════════
+   PAGE 2 — PROJECT DETAIL
+═══════════════════════════════ */
+
+/* ─── CINEMATIC HERO ─── */
+.proj-hero{
+  min-height:100dvh;position:relative;overflow:hidden;
+  background:#0A0A0A;color:var(--white);
+}
+.proj-hero-bg{
+  position:absolute;inset:0;
+  background:url('https://images.pexels.com/photos/10407689/pexels-photo-10407689.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop') center/cover;
+  animation:heroZoom 18s ease forwards;
+  filter:grayscale(30%) contrast(1.08);
+}
+.proj-hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.2) 35%,rgba(0,0,0,0.9) 100%),
+    linear-gradient(90deg,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.1) 65%);
+}
+.ph-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.035) 1px,transparent 1px);
+  background-size:80px 80px;
+}
+
+/* Hero top bar */
+.ph-top{
+  position:absolute;top:88px;left:0;right:0;z-index:3;
+  padding:0 80px;
+  display:flex;justify-content:space-between;align-items:flex-start;
+}
+.ph-breadcrumb{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:400;letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.55);
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;
+}
+.ph-breadcrumb .crumb-arrow{color:rgba(255,255,255,0.3)}
+.ph-breadcrumb .crumb-current{color:rgba(255,255,255,0.9)}
+.ph-breadcrumb:hover .crumb-back{color:white;text-decoration:underline}
+
+.ph-status{
+  display:flex;gap:20px;align-items:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.75);
+}
+.ph-status .badge{
+  padding:5px 10px;
+  border:1px solid rgba(255,255,255,0.3);
+  color:rgba(255,255,255,0.9);
+}
+.ph-status .badge.archive{border-color:rgba(255,255,255,0.25)}
+.ph-status .badge.complete{background:var(--white);color:var(--black);border-color:var(--white)}
+
+/* Hero main content */
+.ph-content{
+  position:absolute;left:80px;right:80px;bottom:220px;z-index:2;
+}
+.ph-project-code{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:500;letter-spacing:0.2em;
+  color:rgba(255,255,255,0.55);text-transform:uppercase;
+  display:flex;align-items:center;gap:18px;
+  margin-bottom:28px;
+}
+.ph-project-code::before{
+  content:'';width:42px;height:1px;background:rgba(255,255,255,0.45);
+}
+.ph-title{
+  font-family:'Titillium Web',sans-serif;
+  font-size:clamp(60px,7.5vw,128px);
+  font-weight:700;line-height:0.9;letter-spacing:-0.02em;
+  color:white;margin-bottom:28px;
+  animation:fadeUp 0.9s 0.3s ease both;
+}
+.ph-title .sub{
+  display:block;font-size:0.42em;font-weight:400;
+  color:rgba(255,255,255,0.65);letter-spacing:0;
+  line-height:1.3;margin-top:20px;
+}
+.ph-tags{
+  display:flex;gap:10px;flex-wrap:wrap;
+}
+.ph-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.15em;
+  text-transform:uppercase;
+  padding:6px 12px;
+  border:1px solid rgba(255,255,255,0.28);
+  color:rgba(255,255,255,0.85);
+}
+
+/* Hero bottom data bar */
+.ph-databar{
+  position:absolute;left:0;right:0;bottom:0;z-index:3;
+  height:80px;
+  background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(12px);
+  border-top:1px solid rgba(255,255,255,0.12);
+  display:grid;grid-template-columns:repeat(4,1fr);
+}
+.ph-db-item{
+  padding:18px 32px;
+  border-right:1px solid rgba(255,255,255,0.08);
+  display:flex;flex-direction:column;justify-content:center;gap:4px;
+}
+.ph-db-item:last-child{border-right:none}
+.ph-db-item .db-k{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:500;letter-spacing:0.2em;
+  text-transform:uppercase;color:rgba(255,255,255,0.45);
+}
+.ph-db-item .db-v{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;font-weight:500;letter-spacing:0.02em;
+  color:var(--white);
+}
+
+/* ═══════════════════════════════
+   PROJECT SPEC DATASHEET
+═══════════════════════════════ */
+.proj-spec{
+  background:var(--off-white);
+  padding:120px 80px 140px;
+}
+.ps-hd{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;
+  margin-bottom:80px;align-items:flex-end;
+}
+.ps-hd .ps-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--mid);
+  display:flex;align-items:center;gap:12px;margin-bottom:22px;
+}
+.ps-hd .ps-eyebrow::before{content:'';width:36px;height:1px;background:var(--black)}
+.ps-hd h2{
+  font-family:'Titillium Web',sans-serif;
+  font-size:clamp(44px,4.6vw,64px);
+  font-weight:700;line-height:0.95;letter-spacing:-0.01em;
+  color:var(--black);
+}
+.ps-hd .ps-desc{
+  font-size:13px;font-weight:300;color:var(--mid);
+  line-height:2;max-width:420px;text-align:right;
+  margin-left:auto;
+}
+
+/* Datasheet table */
+.ps-table{border-top:1px solid var(--black)}
+.ps-row{
+  display:grid;
+  grid-template-columns:80px 220px 1fr;
+  gap:24px;padding:28px 8px;
+  border-bottom:1px solid var(--border);
+  align-items:baseline;
+}
+.ps-row .psr-idx{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:500;
+  color:var(--light);letter-spacing:0.1em;
+}
+.ps-row .psr-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:500;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--mid);
+}
+.ps-row .psr-value{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:17px;font-weight:500;color:var(--black);
+  line-height:1.5;
+}
+.ps-row .psr-value .en{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;font-weight:400;color:var(--mid);
+  margin-left:10px;letter-spacing:0.05em;
+}
+.ps-row.full .psr-value{font-size:14.5px;font-weight:300;line-height:2;color:var(--mid)}
+
+/* ═══════════════════════════════
+   PROJECT METRICS DASHBOARD
+═══════════════════════════════ */
+.proj-metrics{
+  background:var(--dark);color:var(--white);
+  padding:120px 80px 140px;
+  position:relative;overflow:hidden;
+}
+.proj-metrics::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  background-size:60px 60px;pointer-events:none;
+}
+.pm-hd{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:80px;position:relative;
+}
+.pm-hd .pm-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.2em;
+  text-transform:uppercase;color:rgba(255,255,255,0.5);
+  display:flex;align-items:center;gap:12px;margin-bottom:22px;
+}
+.pm-hd .pm-eyebrow::before{content:'';width:36px;height:1px;background:rgba(255,255,255,0.45)}
+.pm-hd h2{
+  font-family:'Titillium Web',sans-serif;
+  font-size:clamp(44px,4.6vw,64px);
+  font-weight:700;line-height:0.95;letter-spacing:-0.01em;
+  color:var(--white);
+}
+.pm-disclaimer{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.45);
+  max-width:280px;text-align:right;line-height:1.8;
+}
+.pm-disclaimer b{color:rgba(255,255,255,0.85);font-weight:600}
+
+.pm-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:0;border-top:1px solid rgba(255,255,255,0.15);
+  position:relative;
+}
+.pm-card{
+  padding:48px 36px;
+  border-right:1px solid rgba(255,255,255,0.08);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  min-height:320px;position:relative;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.pm-card:last-child{border-right:none}
+.pm-card .pm-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:40px;
+}
+.pm-card .pm-k{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.15em;
+  text-transform:uppercase;color:rgba(255,255,255,0.55);
+}
+.pm-card .pm-badge{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;font-weight:500;letter-spacing:0.15em;
+  text-transform:uppercase;
+  padding:3px 7px;
+  border:1px solid rgba(255,255,255,0.25);
+  color:rgba(255,255,255,0.7);
+}
+.pm-card .pm-badge.est{border-color:rgba(255,255,255,0.4)}
+.pm-card .pm-big{
+  font-family:'Titillium Web',sans-serif;
+  font-size:72px;font-weight:700;line-height:0.95;
+  color:var(--white);letter-spacing:-0.02em;
+  margin-bottom:16px;
+}
+.pm-card .pm-big .pm-unit{
+  font-family:'JetBrains Mono',monospace;
+  font-size:18px;font-weight:400;
+  color:rgba(255,255,255,0.55);margin-left:8px;
+}
+.pm-card .pm-desc{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:13px;font-weight:300;line-height:1.85;
+  color:rgba(255,255,255,0.65);max-width:280px;
+}
+.pm-card .pm-bar{
+  margin-top:20px;
+  height:6px;background:rgba(255,255,255,0.08);
+  position:relative;overflow:hidden;
+}
+.pm-card .pm-bar::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:var(--pct,70%);background:rgba(255,255,255,0.7);
+  transition:width 1.2s 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.pm-card .pm-bar-meta{
+  display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.4);margin-top:8px;
+}
+
+/* ═══════════════════════════════
+   SPLIT SCROLLYTELLING TIMELINE
+═══════════════════════════════ */
+.proj-timeline{
+  background:var(--off-white);
+  padding:120px 0 0;
+  position:relative;
+}
+.pt-hd{
+  padding:0 80px 80px;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:flex-end;
+}
+.pt-hd .pt-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--mid);
+  display:flex;align-items:center;gap:12px;margin-bottom:22px;
+}
+.pt-hd .pt-eyebrow::before{content:'';width:36px;height:1px;background:var(--black)}
+.pt-hd h2{
+  font-family:'Titillium Web',sans-serif;
+  font-size:clamp(44px,4.6vw,64px);
+  font-weight:700;line-height:0.95;letter-spacing:-0.01em;
+  color:var(--black);
+}
+.pt-hd p{
+  font-size:13px;font-weight:300;color:var(--mid);
+  line-height:1.95;max-width:380px;text-align:right;margin-left:auto;
+}
+
+/* Split container */
+.pt-split{
+  display:grid;grid-template-columns:1fr 1fr;
+  border-top:1px solid var(--black);
+  position:relative;
+}
+.pt-left{
+  position:sticky;top:64px;
+  height:calc(100vh - 64px);
+  background:var(--white);
+  border-right:1px solid var(--black);
+  padding:80px 60px;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.pt-left .pt-stamp{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--light);
+  display:flex;justify-content:space-between;
+}
+.pt-left .pt-stage-display{
+  display:flex;flex-direction:column;gap:24px;
+}
+.pt-left .pt-idx-big{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;font-weight:500;letter-spacing:0.15em;
+  color:var(--black);
+}
+.pt-left .pt-year{
+  font-family:'Titillium Web',sans-serif;
+  font-size:clamp(72px,8vw,120px);
+  font-weight:700;line-height:0.9;letter-spacing:-0.02em;
+  color:var(--black);
+  transition:opacity 0.45s,transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.pt-left .pt-stage-title{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:26px;font-weight:700;line-height:1.3;
+  color:var(--black);
+  transition:opacity 0.45s 0.05s,transform 0.5s 0.05s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.pt-left .pt-stage-desc{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:13px;font-weight:300;line-height:1.95;
+  color:var(--mid);max-width:380px;
+  transition:opacity 0.45s 0.1s;
+}
+.pt-left .pt-progress-wrap{
+  display:flex;flex-direction:column;gap:14px;
+}
+.pt-left .pt-progress-meta{
+  display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.1em;
+  color:var(--black);text-transform:uppercase;
+}
+.pt-left .pt-progress-meta .total{color:var(--light)}
+.pt-left .pt-progress-bar{
+  height:3px;background:var(--border);position:relative;
+}
+.pt-left .pt-progress-bar::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:var(--pt-pct,20%);
+  background:var(--black);
+  transition:width 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.pt-left .pt-dots{
+  display:flex;gap:6px;margin-top:6px;
+}
+.pt-left .pt-dot{
+  width:10px;height:10px;border:1px solid var(--black);
+  transition:background 0.3s;
+}
+.pt-left .pt-dot.active{background:var(--black)}
+
+/* Right column scenes */
+.pt-right{
+  display:flex;flex-direction:column;
+}
+.pt-scene{
+  min-height:100vh;padding:80px 80px 80px 60px;
+  display:flex;flex-direction:column;justify-content:center;
+  border-bottom:1px solid var(--border);
+  position:relative;
+}
+.pt-scene:last-child{border-bottom:none}
+.pt-scene-img{
+  width:100%;height:58vh;max-height:560px;
+  overflow:hidden;position:relative;
+  margin-bottom:32px;
+}
+.pt-scene-img img{
+  width:100%;height:100%;object-fit:cover;
+  filter:grayscale(20%);
+  transition:transform 8s ease;
+}
+.pt-scene.in-view .pt-scene-img img{transform:scale(1.06)}
+.pt-scene-img::after{
+  content:attr(data-caption);
+  position:absolute;left:20px;bottom:16px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:500;letter-spacing:0.12em;
+  text-transform:uppercase;color:white;
+  background:rgba(0,0,0,0.65);padding:6px 10px;
+}
+.pt-scene-meta{
+  display:flex;gap:28px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--mid);
+}
+.pt-scene-meta b{color:var(--black);font-weight:600}
+
+/* ═══════════════════════════════
+   PROJECT GALLERY — INDEXED
+═══════════════════════════════ */
+.proj-gallery{
+  background:var(--off-white);
+  padding:120px 80px 140px;
+  border-top:1px solid var(--border);
+}
+.pg-hd{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:60px;
+}
+.pg-hd .pg-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--mid);
+  display:flex;align-items:center;gap:12px;margin-bottom:22px;
+}
+.pg-hd .pg-eyebrow::before{content:'';width:36px;height:1px;background:var(--black)}
+.pg-hd h2{
+  font-family:'Titillium Web',sans-serif;
+  font-size:clamp(44px,4.6vw,64px);
+  font-weight:700;line-height:0.95;letter-spacing:-0.01em;
+  color:var(--black);
+}
+.pg-hd .pg-count{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--light);
+}
+.pg-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  grid-template-rows:repeat(2,280px);
+  gap:12px;
+}
+.pg-item{
+  position:relative;overflow:hidden;cursor:pointer;
+}
+.pg-item img{
+  width:100%;height:100%;object-fit:cover;
+  filter:grayscale(25%);
+  transition:transform 0.8s ease,filter 0.5s;
+}
+.pg-item:hover img{transform:scale(1.06);filter:grayscale(0%)}
+.pg-item .pg-meta{
+  position:absolute;left:14px;bottom:12px;right:14px;
+  display:flex;justify-content:space-between;align-items:flex-end;
+  color:white;z-index:2;
+}
+.pg-item::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,0.65) 100%);
+  pointer-events:none;
+}
+.pg-item .pg-meta .pg-id{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:500;letter-spacing:0.12em;
+  text-transform:uppercase;
+  position:relative;z-index:3;
+}
+.pg-item .pg-meta .pg-coord{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:400;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.7);
+  position:relative;z-index:3;
+}
+.pg-1{grid-column:span 3;grid-row:span 2}
+.pg-2{grid-column:span 3;grid-row:span 1}
+.pg-3{grid-column:span 1;grid-row:span 1}
+.pg-4{grid-column:span 1;grid-row:span 1}
+.pg-5{grid-column:span 1;grid-row:span 1}
+
+/* Back nav */
+.back-nav{
+  background:var(--dark);color:white;
+  padding:60px 80px;
+  display:flex;justify-content:space-between;align-items:center;
+  cursor:pointer;transition:background 0.3s;
+}
+.back-nav:hover{background:#222}
+.back-nav .bn-left{
+  display:flex;align-items:center;gap:24px;
+}
+.back-nav .bn-arrow{
+  width:48px;height:48px;
+  border:1px solid rgba(255,255,255,0.3);
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.3s;
+}
+.back-nav:hover .bn-arrow{border-color:white;background:white}
+.back-nav:hover .bn-arrow svg{stroke:var(--black);transform:translateX(-3px)}
+.back-nav .bn-arrow svg{
+  width:20px;height:20px;stroke:white;stroke-width:1.5;fill:none;
+  transition:all 0.3s;
+}
+.back-nav .bn-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:500;letter-spacing:0.15em;
+  text-transform:uppercase;color:rgba(255,255,255,0.55);
+}
+.back-nav .bn-label b{color:white;display:block;font-size:18px;margin-top:4px;letter-spacing:0.02em;text-transform:none;font-weight:500;font-family:'Noto Sans KR',sans-serif}
+.back-nav .bn-stamp{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:rgba(255,255,255,0.45);
+  letter-spacing:0.1em;text-align:right;line-height:1.8;
+}
+
+/* ─── FOOTER (v11 동일) ─── */
+.footer{
+  background:var(--off-white);
+  border-top:1px solid var(--border);
+  padding:52px 80px 40px;
+}
+.footer-menu-row{
+  display:flex;align-items:flex-start;
+  justify-content:space-between;margin-bottom:48px;
+}
+.foot-menu-grid{display:grid;grid-template-columns:220px 1fr;gap:0 0;flex:1}
+.foot-menu-col{display:flex;flex-direction:column;gap:18px}
+.foot-menu-col a{
+  font-size:13.5px;font-weight:400;
+  color:var(--black);text-decoration:none;
+  letter-spacing:0.2px;line-height:1;
+  transition:opacity 0.2s;
+}
+.foot-menu-col a:hover{opacity:0.55}
+.foot-menu-col a.privacy{font-weight:700}
+.foot-site-area{flex-shrink:0;position:relative}
+.btn-family{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:13px;font-weight:400;
+  color:var(--black);text-decoration:none;
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;border:none;background:none;padding:0;
+  border-bottom:1px solid var(--black);padding-bottom:6px;
+  min-width:180px;justify-content:space-between;
+  transition:opacity 0.2s;
+}
+.btn-family:hover{opacity:0.6}
+.btn-family .chevron{font-size:11px;transition:transform 0.25s;line-height:1}
+.btn-family.open .chevron{transform:rotate(180deg)}
+.familyList{
+  display:none;position:absolute;right:0;top:calc(100% + 4px);
+  background:white;border:1px solid var(--border);
+  box-shadow:0 8px 24px rgba(0,0,0,0.1);
+  padding:20px 24px;min-width:360px;z-index:200;
+}
+.familyList.open{display:block}
+.familyList ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+.familyList li{display:flex;align-items:baseline;gap:16px}
+.link_tit{
+  font-family:'Titillium Web',sans-serif;
+  font-size:9px;font-weight:600;letter-spacing:2px;
+  text-transform:uppercase;color:var(--mid);
+  flex-shrink:0;width:46px;
+}
+.links{display:flex;flex-wrap:wrap;gap:4px 14px}
+.links a{
+  font-size:12px;font-weight:300;
+  color:var(--black);text-decoration:none;
+  transition:opacity 0.2s;
+}
+.links a:hover{opacity:0.5}
+.footer-bottom-row{display:flex;align-items:center;justify-content:space-between;padding-top:0}
+.foot-copy{font-size:12.5px;font-weight:300;color:var(--mid);letter-spacing:0.3px}
+.foot-social{display:flex;gap:8px}
+.foot-social a{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--dark);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity 0.2s;text-decoration:none;
+}
+.foot-social a:hover{opacity:0.7}
+.foot-social svg{width:16px;height:16px;fill:white}
+
+/* ═══════════════════════════════════════════════
+   MOBILE NAV OVERLAY
+═══════════════════════════════════════════════ */
+.mobile-nav-overlay{
+  position:fixed;inset:0;
+  background:rgba(10,12,14,0.97);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  z-index:1100;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(-12px);
+  transition:opacity 0.4s cubic-bezier(0.25,0.46,0.45,0.94),
+             transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+  overflow-y:auto;
+}
+.mobile-nav-overlay.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+.mn-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 24px;height:64px;
+  border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;
+}
+.mn-head-logo{display:flex;align-items:center;gap:10px}
+.mn-head-logo svg{width:30px;height:30px}
+.mn-head-logo-text{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:15px;font-weight:700;color:white;letter-spacing:0.5px;
+}
+.mn-close{
+  width:38px;height:38px;background:none;border:none;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.mn-close svg{width:22px;height:22px;stroke:white;fill:none;stroke-width:1.4}
+.mn-list{
+  list-style:none;padding:8px 0 24px;
+  display:flex;flex-direction:column;flex:1;
+}
+.mn-list>li{border-bottom:1px solid rgba(255,255,255,0.05)}
+.mn-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 24px;cursor:pointer;
+}
+.mn-row>a,.mn-row>span{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:16px;font-weight:500;
+  color:rgba(255,255,255,0.92);text-decoration:none;
+  letter-spacing:0.2px;flex:1;
+}
+.mn-row .mn-chev{
+  width:20px;height:20px;
+  stroke:rgba(255,255,255,0.5);fill:none;stroke-width:1.5;
+  transition:transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);flex-shrink:0;
+}
+.mn-list>li.open .mn-chev{transform:rotate(180deg)}
+.mn-sub{
+  max-height:0;overflow:hidden;
+  transition:max-height 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+  background:rgba(255,255,255,0.02);
+}
+.mn-list>li.open .mn-sub{max-height:520px}
+.mn-sub a{
+  display:block;padding:13px 24px 13px 40px;
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:13.5px;font-weight:300;
+  color:rgba(255,255,255,0.55);text-decoration:none;letter-spacing:0.2px;
+}
+.mn-sub a:active{color:white}
+.mn-foot{
+  padding:24px;flex-shrink:0;
+  border-top:1px solid rgba(255,255,255,0.06);
+  display:flex;gap:10px;align-items:center;
+}
+.mn-foot-icon{
+  width:42px;height:42px;border-radius:50%;
+  border:1px solid rgba(255,255,255,0.15);
+  background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.mn-foot-icon svg{width:18px;height:18px;stroke:rgba(255,255,255,0.7);fill:none;stroke-width:1.5}
+.mn-foot-meta{
+  margin-left:auto;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.15em;
+  color:rgba(255,255,255,0.45);text-transform:uppercase;
+}
+
+/* Mobile-only elements hidden by default on desktop */
+.mobile-only{display:none}
+.pt-scene-mobile-meta{display:none}
+.biz-row-thumb-mobile{display:none}
+
+/* Drag-to-scroll cursor hint on mobile mode */
+body.touch-sim{cursor:grab}
+body.touch-sim.dragging{cursor:grabbing;user-select:none}
+body.touch-sim.dragging *{pointer-events:none}
+
+/* ═══════════════════════════════════════════════
+   MOBILE BREAKPOINT  (≤ 767px)
+═══════════════════════════════════════════════ */
+@media (max-width: 767px){
+
+  /* ─── GNB ─── */
+  .gnb{padding:0 20px;height:60px}
+  .gnb-logo-mark{width:28px;height:28px}
+  .gnb-logo-text{font-size:14px}
+  .gnb-nav{display:none}
+  .gnb-icons .gnb-icon:nth-child(1),
+  .gnb-icons .gnb-icon:nth-child(2){display:none}
+  .gnb-icons{margin-left:auto}
+
+  /* Cursor preview disabled on mobile */
+  .biz-preview{display:none !important}
+
+  /* ─── BIZ HERO ─── */
+  .biz-hero{min-height:100dvh}
+  .hero-meta-tl{
+    top:76px;left:24px;
+  }
+  .hero-meta-tl .m1{font-size:9px}
+  .hero-meta-tl .m2{font-size:9px}
+  .hero-meta-tr{
+    top:76px;right:24px;
+    font-size:9px;line-height:1.8;
+  }
+  .biz-hero-content{left:24px;right:24px;bottom:140px}
+  .biz-hero-eyebrow{font-size:9.5px;margin-bottom:22px}
+  .biz-hero-eyebrow::before{width:28px}
+  .biz-hero-title{
+    font-size:clamp(52px,14vw,76px);
+    letter-spacing:-0.01em;line-height:0.9;
+  }
+  .biz-hero-title .t-num{font-size:0.25em;margin-left:8px}
+
+  /* Ticker — shrink */
+  .biz-hero-ticker{height:50px}
+  .ticker-label{padding:0 16px;font-size:9px;gap:8px}
+  .ticker-inner{font-size:10px}
+  .ticker-inner span{padding:0 16px}
+
+  /* ─── BIZ INDEX → CARD STACK ─── */
+  .biz-index{padding:72px 24px 88px}
+  .biz-index-hd{
+    grid-template-columns:1fr;gap:28px;margin-bottom:48px;
+  }
+  .biz-index-hd .hd-left .sec-tag{font-size:9.5px;margin-bottom:18px}
+  .biz-index-hd .hd-left .sec-tag::before{width:24px}
+  .biz-index-hd h2{font-size:clamp(38px,10vw,56px)}
+  .biz-index-hd .hd-right{align-items:flex-start}
+  .biz-index-hd .hd-right p{max-width:none;text-align:left;font-size:12.5px}
+  .biz-index-hd .hd-right .sort-meta{font-size:9px;gap:14px}
+
+  /* Table head HIDDEN, rows become cards */
+  .biz-table{border-top:1px solid var(--black)}
+  .biz-table-head{display:none}
+  .biz-row{
+    grid-template-columns:auto 1fr 64px;
+    grid-template-rows:auto auto auto;
+    grid-template-areas:
+      "idx name thumb"
+      "code name thumb"
+      "regions regions regions"
+      "status arrow arrow";
+    gap:8px 16px;
+    padding:22px 0;
+    align-items:start;
+  }
+  .biz-row:hover{padding-left:0;background:transparent}
+  .biz-row:hover::before{width:3px}
+  .biz-row .br-idx{
+    grid-area:idx;
+    font-size:10px;color:var(--light);
+    padding-top:4px;
+  }
+  .biz-row .br-code{
+    grid-area:code;
+    font-size:11px;font-weight:500;
+    font-family:'JetBrains Mono',monospace;
+    color:var(--mid);letter-spacing:0.1em;
+    padding-top:0;
+  }
+  .biz-row .br-name{
+    grid-area:name;
+    font-size:19px;font-weight:700;
+    line-height:1.25;
+  }
+  .biz-row .br-name .sub{
+    font-size:9.5px;margin-top:4px;
+  }
+  /* Mobile thumbnail (replaces cursor preview) */
+  .biz-row-thumb-mobile{
+    display:block;
+    grid-area:thumb;
+    width:64px;height:64px;
+    background-size:cover;background-position:center;
+    filter:grayscale(25%);
+  }
+  .biz-row .br-regions{
+    grid-area:regions;
+    margin-top:16px;padding-top:16px;
+    border-top:1px solid var(--border);
+  }
+  .biz-row .br-regions .chip{
+    font-size:8.5px;padding:3px 7px;
+  }
+  .biz-row .br-status{
+    grid-area:status;
+    font-size:9.5px;margin-top:10px;
+  }
+  .biz-row .br-arrow{
+    grid-area:arrow;
+    justify-self:end;
+    width:36px;height:36px;margin-top:10px;
+  }
+  .biz-row .br-arrow svg{width:16px;height:16px}
+
+  /* ─── LIVE METRICS → 1 column ─── */
+  .live-metrics{padding:80px 24px 96px}
+  .live-metrics-hd{
+    flex-direction:column;align-items:flex-start;gap:24px;
+    margin-bottom:48px;
+  }
+  .live-metrics-hd h2{font-size:clamp(34px,9vw,48px)}
+  .live-metrics-hd .lm-eyebrow{font-size:9.5px;margin-bottom:16px}
+  .live-metrics-hd .lm-eyebrow::before{width:24px}
+  .live-metrics-hd .lm-stamp{text-align:left;font-size:9px}
+  .lm-grid{grid-template-columns:1fr}
+  .lm-card{
+    padding:32px 24px 28px;min-height:200px;
+    border-right:none;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .lm-card .lm-big{font-size:44px}
+  .lm-card .lm-unit{font-size:12px}
+
+  /* ─── FEATURED PROJECT → 1 column ─── */
+  .featured-proj{padding:80px 24px 96px}
+  .fp-heading{font-size:clamp(34px,9vw,48px);margin-bottom:36px}
+  .fp-card{grid-template-columns:1fr}
+  .fp-card:hover{transform:none;box-shadow:none}
+  .fp-img{min-height:280px}
+  .fp-img-meta{padding:20px}
+  .fp-info{padding:32px 24px}
+  .fp-info .fi-top h3{font-size:24px}
+  .fp-specs{gap:16px 20px}
+  .fp-spec-row .sv{font-size:12.5px}
+
+  /* ─── PROJECT HERO ─── */
+  .proj-hero{min-height:100dvh}
+  .ph-top{padding:0 24px;top:76px}
+  .ph-breadcrumb{font-size:9px;flex-wrap:wrap;gap:6px}
+  .ph-status{gap:8px;font-size:9px}
+  .ph-status .badge{padding:4px 8px;font-size:8.5px}
+  .ph-content{left:24px;right:24px;bottom:200px}
+  .ph-project-code{font-size:9.5px;margin-bottom:20px}
+  .ph-project-code::before{width:28px}
+  .ph-title{
+    font-size:clamp(42px,11vw,64px);
+    margin-bottom:24px;
+  }
+  .ph-title .sub{font-size:0.35em;margin-top:14px}
+  .ph-tag{font-size:8.5px;padding:4px 9px}
+
+  /* Data bar → 2×2 */
+  .ph-databar{
+    height:auto;
+    grid-template-columns:1fr 1fr;
+  }
+  .ph-db-item{
+    padding:14px 18px;
+    border-right:1px solid rgba(255,255,255,0.08);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .ph-db-item:nth-child(2),
+  .ph-db-item:nth-child(4){border-right:none}
+  .ph-db-item:nth-child(3),
+  .ph-db-item:nth-child(4){border-bottom:none}
+  .ph-db-item .db-k{font-size:8px}
+  .ph-db-item .db-v{font-size:11.5px}
+
+  /* ─── PROJECT SPEC → stack ─── */
+  .proj-spec{padding:80px 24px 96px}
+  .ps-hd{
+    grid-template-columns:1fr;gap:24px;margin-bottom:44px;
+    align-items:flex-start;
+  }
+  .ps-hd h2{font-size:clamp(34px,9vw,48px)}
+  .ps-hd .ps-eyebrow{font-size:9.5px;margin-bottom:16px}
+  .ps-hd .ps-eyebrow::before{width:24px}
+  .ps-hd .ps-desc{
+    text-align:left;margin-left:0;max-width:none;font-size:12.5px;
+  }
+  .ps-row{
+    grid-template-columns:40px 1fr;
+    grid-template-areas:
+      "idx label"
+      "idx value";
+    gap:4px 12px;
+    padding:22px 0;
+    align-items:flex-start;
+  }
+  .ps-row .psr-idx{grid-area:idx;font-size:10px;padding-top:2px}
+  .ps-row .psr-label{grid-area:label;font-size:10px;margin-bottom:4px}
+  .ps-row .psr-value{grid-area:value;font-size:15px;line-height:1.5}
+  .ps-row .psr-value .en{display:block;margin-left:0;font-size:11px;margin-top:2px}
+  .ps-row.full .psr-value{font-size:13px;line-height:1.85}
+
+  /* ─── PROJECT METRICS → 1 col ─── */
+  .proj-metrics{padding:80px 24px 96px}
+  .pm-hd{
+    flex-direction:column;align-items:flex-start;gap:24px;
+    margin-bottom:48px;
+  }
+  .pm-hd h2{font-size:clamp(34px,9vw,48px)}
+  .pm-hd .pm-eyebrow{font-size:9.5px;margin-bottom:16px}
+  .pm-hd .pm-eyebrow::before{width:24px}
+  .pm-disclaimer{text-align:left;max-width:none;font-size:9px}
+  .pm-grid{grid-template-columns:1fr}
+  .pm-card{
+    padding:36px 24px;min-height:240px;
+    border-right:none;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .pm-card .pm-big{font-size:52px}
+  .pm-card .pm-unit{font-size:14px}
+  .pm-card .pm-desc{font-size:12px;max-width:none}
+
+  /* ─── TIMELINE → VERTICAL LOG CARDS ─── */
+  .proj-timeline{padding:80px 0 0}
+  .pt-hd{
+    padding:0 24px 44px;
+    grid-template-columns:1fr;gap:24px;align-items:flex-start;
+  }
+  .pt-hd h2{font-size:clamp(34px,9vw,48px)}
+  .pt-hd .pt-eyebrow{font-size:9.5px;margin-bottom:16px}
+  .pt-hd .pt-eyebrow::before{width:24px}
+  .pt-hd p{max-width:none;text-align:left;font-size:12.5px;margin-left:0}
+
+  /* Split → stacked */
+  .pt-split{grid-template-columns:1fr;border-top:1px solid var(--black)}
+  /* Hide sticky left panel entirely on mobile */
+  .pt-left{display:none}
+  .pt-right{display:flex;flex-direction:column}
+  .pt-scene{
+    min-height:auto;
+    padding:40px 24px 40px 64px;
+    border-bottom:1px solid var(--border);
+    position:relative;
+  }
+  /* Vertical rail line on left */
+  .pt-scene::before{
+    content:'';position:absolute;
+    left:32px;top:0;bottom:0;width:1px;
+    background:var(--border);
+  }
+  .pt-scene::after{
+    content:'';position:absolute;
+    left:26px;top:46px;
+    width:13px;height:13px;
+    border:1.5px solid var(--black);background:var(--off-white);
+    z-index:2;
+    transition:background 0.4s;
+  }
+  .pt-scene.in-view::after{background:var(--black)}
+
+  /* Show mobile meta */
+  .pt-scene-mobile-meta{
+    display:flex;flex-direction:column;gap:8px;
+    margin-bottom:20px;
+  }
+  .pt-scene-mobile-meta .ptm-idx{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;font-weight:500;letter-spacing:0.15em;
+    color:var(--light);text-transform:uppercase;
+  }
+  .pt-scene-mobile-meta .ptm-year{
+    font-family:'Titillium Web',sans-serif;
+    font-size:38px;font-weight:700;line-height:0.95;
+    color:var(--black);letter-spacing:-0.01em;
+  }
+  .pt-scene-mobile-meta .ptm-title{
+    font-size:18px;font-weight:700;color:var(--black);
+    margin-top:4px;
+  }
+  .pt-scene-mobile-meta .ptm-desc{
+    font-size:12.5px;font-weight:300;line-height:1.85;
+    color:var(--mid);margin-top:8px;
+  }
+
+  .pt-scene-img{height:200px;margin-bottom:20px}
+  .pt-scene-meta{gap:14px;font-size:9px;flex-wrap:wrap}
+
+  /* ─── GALLERY ─── */
+  .proj-gallery{padding:80px 24px 96px}
+  .pg-hd{
+    flex-direction:column;align-items:flex-start;gap:16px;
+    margin-bottom:40px;
+  }
+  .pg-hd h2{font-size:clamp(34px,9vw,48px)}
+  .pg-hd .pg-eyebrow{font-size:9.5px;margin-bottom:16px}
+  .pg-hd .pg-eyebrow::before{width:24px}
+  .pg-grid{
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:240px 160px 160px 160px;
+    gap:6px;
+  }
+  .pg-1{grid-column:span 2;grid-row:span 1}
+  .pg-2{grid-column:span 2;grid-row:span 1}
+  .pg-3{grid-column:span 1;grid-row:span 1}
+  .pg-4{grid-column:span 1;grid-row:span 1}
+  .pg-5{grid-column:span 2;grid-row:span 1}
+
+  /* ─── BACK NAV ─── */
+  .back-nav{
+    flex-direction:column;align-items:flex-start;gap:24px;
+    padding:40px 24px;
+  }
+  .back-nav .bn-stamp{text-align:left}
+
+  /* ─── FOOTER ─── */
+  .footer{padding:44px 24px 32px}
+  .footer-menu-row{flex-direction:column;gap:32px;margin-bottom:36px}
+  .foot-menu-grid{grid-template-columns:1fr;gap:18px;width:100%}
+  .foot-menu-col{gap:16px}
+  .foot-site-area{width:100%}
+  .btn-family{width:100%;min-width:0}
+  .familyList{
+    position:static;min-width:0;width:100%;
+    margin-top:8px;box-shadow:none;padding:18px 20px;
+  }
+  .footer-bottom-row{flex-direction:column;align-items:flex-start;gap:18px}
+
+  body.nav-open{overflow:hidden}
+}
+
+/* Small devices */
+@media (max-width: 380px){
+  .biz-hero-title{font-size:48px}
+  .ph-title{font-size:40px}
+  .lm-card .lm-big{font-size:38px}
+  .pm-card .pm-big{font-size:44px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ GNB (v11 identical) ═══════════ -->
+<div class="gnb-wrap" id="gnb-wrap">
+  <div class="gnb" id="gnb">
+    <div class="gnb-logo" onclick="showPage('business')">
+      <svg class="gnb-logo-mark" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="grad-top" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#F5C200"/><stop offset="100%" stop-color="#F05A00"/>
+          </linearGradient>
+          <linearGradient id="grad-mid" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00B4E0"/><stop offset="100%" stop-color="#0062C8"/>
+          </linearGradient>
+          <linearGradient id="grad-bot" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#90D000"/><stop offset="100%" stop-color="#009040"/>
+          </linearGradient>
+          <clipPath id="circle-clip"><circle cx="60" cy="60" r="56"/></clipPath>
+        </defs>
+        <circle cx="60" cy="60" r="56" fill="transparent"/>
+        <path clip-path="url(#circle-clip)" d="M 8 44 C 20 30, 50 18, 72 34 C 90 48, 108 38, 112 32 L 112 50 C 108 56, 90 66, 72 52 C 50 36, 20 48, 8 62 Z" fill="url(#grad-top)"/>
+        <path clip-path="url(#circle-clip)" d="M 8 62 C 20 48, 50 36, 72 52 C 90 66, 108 56, 112 50 L 112 70 C 108 76, 90 86, 72 72 C 50 56, 20 68, 8 82 Z" fill="url(#grad-mid)"/>
+        <path clip-path="url(#circle-clip)" d="M 8 82 C 20 68, 50 56, 72 72 C 90 86, 108 76, 112 70 L 112 88 C 104 108, 84 118, 60 118 C 36 118, 16 108, 8 88 Z" fill="url(#grad-bot)"/>
+        <path clip-path="url(#circle-clip)" d="M 8 44 C 16 24, 36 6, 60 6 C 84 6, 104 24, 112 44 L 112 32 C 104 10, 84 4, 60 4 C 36 4, 16 10, 8 32 Z" fill="url(#grad-top)"/>
+      </svg>
+      <span class="gnb-logo-text">GS 건설</span>
+    </div>
+
+    <ul class="gnb-nav">
+      <li>
+        <a href="/Management/System/System.aspx">지속가능의 GS</a>
+        <div class="gnb-drop">
+          <a href="/Management/System/System.aspx">지속가능경영</a>
+          <a href="/Management/CP/CP.aspx">공정거래자율준수</a>
+          <a href="/Management/Quality/Quality.aspx">품질경영</a>
+          <a href="/Management/Safety/Safety.aspx">안전보건경영</a>
+          <a href="/Management/Env/Env.aspx">환경경영</a>
+          <a href="/Management/Ethics/Ethics.aspx">윤리경영</a>
+          <a href="/Management/Epigyny/Epigyny.aspx">동반성장</a>
+          <a href="/Management/Contribute/Contribute.aspx">사회공헌</a>
+          <a href="/Management/humanrights/humanrights.aspx">인권경영</a>
+        </div>
+      </li>
+      <li>
+        <a href="/Business/Default.aspx?Lang=ko&BusinessResultStep3=1" class="active" id="nav-biz" onclick="showPage('business'); return false;">사업영역</a>
+        <div class="gnb-drop">
+          <a href="/Business/Default.aspx?Lang=ko&BusinessResultStep3=1">플랜트 사업</a>
+          <a href="/Business/Default.aspx?Lang=ko&BusinessResultStep3=3">건축·주택 사업</a>
+          <a href="/Business/Default.aspx?Lang=ko&BusinessResultStep3=4">인프라 사업</a>
+          <a href="/Business/Default.aspx?Lang=ko&BusinessResultStep3=5">레저 사업</a>
+          <a href="/Business/Default.aspx?Lang=ko&BusinessResultStep3=6">프리패브 사업</a>
+          <a href="/Business/Result.aspx">프로젝트 검색</a>
+        </div>
+      </li>
+      <li>
+        <a href="/Innovation/Tech_Inno.aspx">기술개발</a>
+        <div class="gnb-drop">
+          <a href="/Innovation/Tech_Inno.aspx">기술전략</a>
+          <a href="/Innovation/Tech_Hold.aspx">보유기술</a>
+          <a href="/Innovation/Laboratory.aspx">연구시설</a>
+        </div>
+      </li>
+      <li>
+        <a href="/IR/Mng/Mng.aspx">투자정보</a>
+        <div class="gnb-drop">
+          <a href="/IR/Mng/Mng.aspx">경영정보</a>
+          <a href="/IR/Announce/Announce_01.aspx">공시정보</a>
+          <a href="/IR/Stock/Stock.aspx?GB=1">주가정보</a>
+          <a href="/IR/Financial/Financial_01.aspx">재무정보</a>
+          <a href="/IR/Data/EarningRelease.aspx">IR Activity</a>
+        </div>
+      </li>
+      <li>
+        <a href="https://gsenc.recruiter.co.kr/career/home" target="_blank">인재채용</a>
+        <div class="gnb-drop">
+          <a href="https://gsenc.recruiter.co.kr/career/rule" target="_blank">인사제도</a>
+          <a href="https://gsenc.recruiter.co.kr/career/welfare" target="_blank">복리후생</a>
+          <a href="https://gsenc.recruiter.co.kr/career/job" target="_blank">직무소개</a>
+          <a href="https://gsenc.recruiter.co.kr/career/process" target="_blank">채용프로세스</a>
+          <a href="https://gsenc.recruiter.co.kr/career/apply" target="_blank">채용공고</a>
+        </div>
+      </li>
+      <li>
+        <a href="/Pr/PrNews.aspx">홍보센터</a>
+        <div class="gnb-drop">
+          <a href="/Pr/PrNews.aspx">News</a>
+          <a href="/Pr/prData/GsCF.aspx?BbsId=PR_CF">GS건설 영상</a>
+          <a href="/Pr/PrPhoto.aspx?BbsId=GSPIC">GS건설 사진</a>
+          <a href="/Pr/StoryDefault.aspx?BbsId=STORY">Story</a>
+        </div>
+      </li>
+      <li>
+        <a href="/Company/Vision.aspx">회사소개</a>
+        <div class="gnb-drop">
+          <a href="/Company/Vision.aspx">비전과 핵심가치</a>
+          <a href="/Company/History.aspx">연혁</a>
+          <a href="/Company/RewardResults.aspx">수상실적</a>
+          <a href="/Company/GlobalCo.aspx">해외지사/법인현황</a>
+          <a href="/Company/Map.aspx">오시는 길</a>
+        </div>
+      </li>
+    </ul>
+
+    <div class="gnb-icons">
+      <button class="gnb-icon" aria-label="고객센터">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+          <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/>
+          <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+        </svg>
+      </button>
+      <button class="gnb-icon" aria-label="방문예약">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+      </button>
+      <button class="gnb-icon" id="hamburgerBtn" aria-label="전체메뉴" onclick="openMobileNav()">
+        <svg viewBox="0 0 24 24">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Cursor-follow preview for biz-index (desktop only) -->
+<div class="biz-preview" id="bizPreview" data-label=""><img src="" alt=""></div>
+
+<!-- ═══════════ MOBILE NAV OVERLAY ═══════════ -->
+<div class="mobile-nav-overlay" id="mobileNav" role="dialog" aria-modal="true" aria-label="전체 메뉴">
+  <div class="mn-head">
+    <div class="mn-head-logo">
+      <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="mn-top" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#F5C200"/><stop offset="100%" stop-color="#F05A00"/></linearGradient>
+          <linearGradient id="mn-mid" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00B4E0"/><stop offset="100%" stop-color="#0062C8"/></linearGradient>
+          <linearGradient id="mn-bot" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#90D000"/><stop offset="100%" stop-color="#009040"/></linearGradient>
+          <clipPath id="mn-clip"><circle cx="60" cy="60" r="56"/></clipPath>
+        </defs>
+        <circle cx="60" cy="60" r="56" fill="transparent"/>
+        <path clip-path="url(#mn-clip)" d="M 8 44 C 20 30, 50 18, 72 34 C 90 48, 108 38, 112 32 L 112 50 C 108 56, 90 66, 72 52 C 50 36, 20 48, 8 62 Z" fill="url(#mn-top)"/>
+        <path clip-path="url(#mn-clip)" d="M 8 62 C 20 48, 50 36, 72 52 C 90 66, 108 56, 112 50 L 112 70 C 108 76, 90 86, 72 72 C 50 56, 20 68, 8 82 Z" fill="url(#mn-mid)"/>
+        <path clip-path="url(#mn-clip)" d="M 8 82 C 20 68, 50 56, 72 72 C 90 86, 108 76, 112 70 L 112 88 C 104 108, 84 118, 60 118 C 36 118, 16 108, 8 88 Z" fill="url(#mn-bot)"/>
+        <path clip-path="url(#mn-clip)" d="M 8 44 C 16 24, 36 6, 60 6 C 84 6, 104 24, 112 44 L 112 32 C 104 10, 84 4, 60 4 C 36 4, 16 10, 8 32 Z" fill="url(#mn-top)"/>
+      </svg>
+      <span class="mn-head-logo-text">GS 건설</span>
+    </div>
+    <button class="mn-close" id="mnClose" aria-label="메뉴 닫기">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <ul class="mn-list">
+    <li>
+      <div class="mn-row" data-toggle>
+        <span>지속가능의 GS</span>
+        <svg class="mn-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mn-sub">
+        <a href="/Management/System/System.aspx">지속가능경영</a>
+        <a href="/Management/CP/CP.aspx">공정거래자율준수</a>
+        <a href="/Management/Quality/Quality.aspx">품질경영</a>
+        <a href="/Management/Safety/Safety.aspx">안전보건경영</a>
+        <a href="/Management/Env/Env.aspx">환경경영</a>
+        <a href="/Management/Ethics/Ethics.aspx">윤리경영</a>
+        <a href="/Management/Epigyny/Epigyny.aspx">동반성장</a>
+        <a href="/Management/Contribute/Contribute.aspx">사회공헌</a>
+      </div>
+    </li>
+    <li class="open">
+      <div class="mn-row" data-toggle>
+        <span>사업영역</span>
+        <svg class="mn-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mn-sub">
+        <a href="#" onclick="showPage('business');closeMobileNav();return false;">플랜트 사업</a>
+        <a href="#" onclick="showPage('business');closeMobileNav();return false;">전력 사업</a>
+        <a href="#" onclick="showPage('business');closeMobileNav();return false;">건축·주택 사업</a>
+        <a href="#" onclick="showPage('project');closeMobileNav();return false;">인프라 사업 (REFY-I)</a>
+        <a href="#" onclick="showPage('business');closeMobileNav();return false;">레저 사업</a>
+        <a href="#" onclick="showPage('business');closeMobileNav();return false;">프리패브 사업</a>
+      </div>
+    </li>
+    <li>
+      <div class="mn-row" data-toggle>
+        <span>기술개발</span>
+        <svg class="mn-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mn-sub">
+        <a href="/Innovation/Tech_Inno.aspx">기술전략</a>
+        <a href="/Innovation/Tech_Hold.aspx">보유기술</a>
+        <a href="/Innovation/Laboratory.aspx">연구시설</a>
+      </div>
+    </li>
+    <li>
+      <div class="mn-row" data-toggle>
+        <span>투자정보</span>
+        <svg class="mn-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="mn-sub">
+        <a href="/IR/Mng/Mng.aspx">경영정보</a>
+        <a href="/IR/Announce/Announce_01.aspx">공시정보</a>
+        <a href="/IR/Stock/Stock.aspx?GB=1">주가정보</a>
+        <a href="/IR/Financial/Financial_01.aspx">재무정보</a>
+      </div>
+    </li>
+    <li><div class="mn-row"><a href="https://gsenc.recruiter.co.kr/career/home" target="_blank">인재채용</a></div></li>
+    <li><div class="mn-row"><a href="/Pr/PrNews.aspx">홍보센터</a></div></li>
+    <li><div class="mn-row"><a href="/Company/Vision.aspx">회사소개</a></div></li>
+  </ul>
+
+  <div class="mn-foot">
+    <button class="mn-foot-icon" aria-label="고객센터">
+      <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+    </button>
+    <button class="mn-foot-icon" aria-label="방문예약">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    </button>
+    <span class="mn-foot-meta">SYS / MENU · v2026.04</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     PAGE 1 — 사업영역 DATA VIEW
+═══════════════════════════════ -->
+<div class="page active" id="page-business">
+
+  <!-- HERO -->
+  <section class="biz-hero">
+    <div class="biz-hero-bg"></div>
+    <div class="hero-grid"></div>
+
+    <div class="hero-meta-tl">
+      <div class="m1"><span class="live-dot on-dark"></span>LIVE · GS E&amp;C DATA VIEW</div>
+      <div class="m2" id="heroClock">— — — — · — —:—:—</div>
+    </div>
+    <div class="hero-meta-tr">
+      <div class="coord">37.5665°N · 126.9780°E</div>
+      <div>SEOUL · HQ GRAN SEOUL</div>
+      <div>SYS / BIZ-INDEX · v2026.04</div>
+    </div>
+
+    <div class="biz-hero-content">
+      <div class="biz-hero-eyebrow">INDEX / BUSINESS AREA</div>
+      <h1 class="biz-hero-title">
+        OUR<br>
+        BUSINESS<span class="t-num">[06]</span><br>
+        AREA
+      </h1>
+    </div>
+
+    <!-- Ticker -->
+    <div class="biz-hero-ticker">
+      <div class="ticker-label"><span class="live-dot"></span>LIVE FEED</div>
+      <div class="ticker-track">
+        <div class="ticker-inner" id="tickerInner">
+          <!-- JS duplicates these for seamless loop -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIZ INDEX — DATA TABLE NAV -->
+  <section class="biz-index">
+    <div class="biz-index-hd">
+      <div class="hd-left">
+        <div class="sec-tag">SECTION / 01 · BUSINESS INDEX</div>
+        <h2>SECTORS<br>ON RECORD <span class="accent">[06]</span></h2>
+      </div>
+      <div class="hd-right">
+        <p>단순 시공을 넘어 토털 솔루션으로 확장된 6개 사업 부문. 각 행을 선택하면 상세 영역으로 이동합니다.</p>
+        <div class="sort-meta">
+          <span>SORT · DEFAULT</span>
+          <span>VIEW · TABLE</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="biz-table">
+      <div class="biz-table-head">
+        <div>IDX</div>
+        <div>CODE</div>
+        <div>SECTOR</div>
+        <div>REGIONS</div>
+        <div>STATUS</div>
+        <div></div>
+      </div>
+
+      <a class="biz-row" href="/Business/Default.aspx?Lang=ko&BusinessResultStep3=1" style="text-decoration:none"
+         data-img="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=640&q=80" data-label="PLANT / REFINERY">
+        <div class="biz-row-thumb-mobile" style="background-image:url(https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=640&q=80)"></div>
+        <div class="br-idx">01</div>
+        <div class="br-code">PLANT</div>
+        <div class="br-name">플랜트 사업<span class="sub">Refinery · Gas · Petrochem · Power</span></div>
+        <div class="br-regions">
+          <span class="chip">APAC</span><span class="chip">MENA</span><span class="chip">EU</span>
+        </div>
+        <div class="br-status"><span class="live-dot" style="background:var(--black)"></span>OPERATIONAL</div>
+        <div class="br-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </a>
+
+      <a class="biz-row" href="#" style="text-decoration:none"
+         data-img="https://images.pexels.com/photos/3229014/pexels-photo-3229014.jpeg?auto=compress&cs=tinysrgb&w=640" data-label="POWER / ENERGY">
+        <div class="biz-row-thumb-mobile" style="background-image:url(https://images.pexels.com/photos/3229014/pexels-photo-3229014.jpeg?auto=compress&cs=tinysrgb&w=640)"></div>
+        <div class="br-idx">02</div>
+        <div class="br-code">POWER</div>
+        <div class="br-name">전력 사업<span class="sub">Thermal · Nuclear · Renewable</span></div>
+        <div class="br-regions">
+          <span class="chip">KR</span><span class="chip">APAC</span>
+        </div>
+        <div class="br-status"><span class="live-dot" style="background:var(--black)"></span>OPERATIONAL</div>
+        <div class="br-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </a>
+
+      <a class="biz-row" href="/Business/Default.aspx?Lang=ko&BusinessResultStep3=3" style="text-decoration:none"
+         data-img="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=640&q=80" data-label="ARCHITECTURE / Xi">
+        <div class="biz-row-thumb-mobile" style="background-image:url(https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=640&q=80)"></div>
+        <div class="br-idx">03</div>
+        <div class="br-code">ARCH</div>
+        <div class="br-name">건축·주택 사업<span class="sub">Xi · Office · Cultural · Hospitality</span></div>
+        <div class="br-regions">
+          <span class="chip">KR</span><span class="chip">GLOBAL</span>
+        </div>
+        <div class="br-status"><span class="live-dot" style="background:var(--black)"></span>OPERATIONAL</div>
+        <div class="br-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </a>
+
+      <a class="biz-row" href="#" onclick="showPage('project');return false;" style="text-decoration:none"
+         data-img="https://images.pexels.com/photos/9407367/pexels-photo-9407367.jpeg?auto=compress&cs=tinysrgb&w=640" data-label="INFRA / HIGHWAY">
+        <div class="biz-row-thumb-mobile" style="background-image:url(https://images.pexels.com/photos/9407367/pexels-photo-9407367.jpeg?auto=compress&cs=tinysrgb&w=640)"></div>
+        <div class="br-idx">04</div>
+        <div class="br-code">INFRA</div>
+        <div class="br-name">인프라 사업<span class="sub">Highway · Railway · Bridge · Port</span></div>
+        <div class="br-regions">
+          <span class="chip">KR</span><span class="chip">APAC</span><span class="chip">LATAM</span>
+        </div>
+        <div class="br-status"><span class="live-dot" style="background:var(--black)"></span>OPERATIONAL</div>
+        <div class="br-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </a>
+
+      <a class="biz-row" href="/Business/Default.aspx?Lang=ko&BusinessResultStep3=5" style="text-decoration:none"
+         data-img="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=640&q=80" data-label="LEISURE / RESORT">
+        <div class="biz-row-thumb-mobile" style="background-image:url(https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=640&q=80)"></div>
+        <div class="br-idx">05</div>
+        <div class="br-code">LEISURE</div>
+        <div class="br-name">레저 사업<span class="sub">Resort · Ski · Golf · Elysian</span></div>
+        <div class="br-regions">
+          <span class="chip">KR</span>
+        </div>
+        <div class="br-status"><span class="live-dot" style="background:var(--black)"></span>OPERATIONAL</div>
+        <div class="br-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </a>
+
+      <a class="biz-row" href="/Business/Default.aspx?Lang=ko&BusinessResultStep3=6" style="text-decoration:none"
+         data-img="https://images.unsplash.com/photo-1590274853856-f22d5ee3d228?w=640&q=80" data-label="PREFAB / MODULAR">
+        <div class="biz-row-thumb-mobile" style="background-image:url(https://images.unsplash.com/photo-1590274853856-f22d5ee3d228?w=640&q=80)"></div>
+        <div class="br-idx">06</div>
+        <div class="br-code">PREFAB</div>
+        <div class="br-name">프리패브 사업<span class="sub">Modular · Off-site · Heim Lab</span></div>
+        <div class="br-regions">
+          <span class="chip">KR</span><span class="chip">UK</span><span class="chip">PL</span>
+        </div>
+        <div class="br-status"><span class="live-dot" style="background:var(--black)"></span>OPERATIONAL</div>
+        <div class="br-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- LIVE METRICS DASHBOARD -->
+  <section class="live-metrics">
+    <div class="live-metrics-hd">
+      <div>
+        <div class="lm-eyebrow">SECTION / 02 · KEY METRICS</div>
+        <h2>COMPANY<br>AT A GLANCE</h2>
+      </div>
+      <div class="lm-stamp">
+        <span class="upd"><span class="live-dot on-dark"></span>LAST UPDATE · Q1 2026</span>
+        <span>SOURCE · GS E&amp;C CORP.</span>
+      </div>
+    </div>
+
+    <div class="lm-grid">
+      <div class="lm-card">
+        <div class="lm-head">
+          <span class="lm-k">REVENUE · ANNUAL</span>
+          <span class="lm-idx">M01</span>
+        </div>
+        <div>
+          <div class="lm-big"><span class="counter" data-to="19.9">0.0</span><span class="lm-unit">TRN KRW</span></div>
+          <svg class="lm-spark" viewBox="0 0 200 40" preserveAspectRatio="none">
+            <path class="area" d="M0 30 L20 25 L40 28 L60 20 L80 22 L100 15 L120 18 L140 12 L160 14 L180 8 L200 10 L200 40 L0 40 Z"/>
+            <path d="M0 30 L20 25 L40 28 L60 20 L80 22 L100 15 L120 18 L140 12 L160 14 L180 8 L200 10"/>
+          </svg>
+          <div class="lm-sub">FY 2024 기준 연결 매출</div>
+        </div>
+      </div>
+
+      <div class="lm-card">
+        <div class="lm-head">
+          <span class="lm-k">PROJECTS · CONCURRENT</span>
+          <span class="lm-idx">M02</span>
+        </div>
+        <div>
+          <div class="lm-big"><span class="counter" data-to="60" data-suffix="+">0</span></div>
+          <svg class="lm-spark" viewBox="0 0 200 40" preserveAspectRatio="none">
+            <path class="area" d="M0 25 L20 20 L40 22 L60 15 L80 18 L100 12 L120 16 L140 10 L160 14 L180 6 L200 8 L200 40 L0 40 Z"/>
+            <path d="M0 25 L20 20 L40 22 L60 15 L80 18 L100 12 L120 16 L140 10 L160 14 L180 6 L200 8"/>
+          </svg>
+          <div class="lm-sub">국내·해외 동시 수행 프로젝트 수</div>
+        </div>
+      </div>
+
+      <div class="lm-card">
+        <div class="lm-head">
+          <span class="lm-k">CREDIT RATING</span>
+          <span class="lm-idx">M03</span>
+        </div>
+        <div>
+          <div class="lm-big">A<span class="lm-unit">KR / STABLE</span></div>
+          <svg class="lm-spark" viewBox="0 0 200 40" preserveAspectRatio="none">
+            <path d="M0 20 L40 20 L40 18 L80 18 L80 16 L120 16 L120 14 L160 14 L160 12 L200 12" stroke-dasharray="2 3"/>
+          </svg>
+          <div class="lm-sub">국내 신용평가 기준 최상위권</div>
+        </div>
+      </div>
+
+      <div class="lm-card">
+        <div class="lm-head">
+          <span class="lm-k">COUNTRIES · OPERATION</span>
+          <span class="lm-idx">M04</span>
+        </div>
+        <div>
+          <div class="lm-big"><span class="counter" data-to="50" data-suffix="+">0</span></div>
+          <svg class="lm-spark" viewBox="0 0 200 40" preserveAspectRatio="none">
+            <path class="area" d="M0 28 L25 24 L50 26 L75 18 L100 20 L125 12 L150 14 L175 8 L200 6 L200 40 L0 40 Z"/>
+            <path d="M0 28 L25 24 L50 26 L75 18 L100 20 L125 12 L150 14 L175 8 L200 6"/>
+          </svg>
+          <div class="lm-sub">해외 진출 누적 국가 수</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PROJECT SPEC CARD -->
+  <section class="featured-proj">
+    <div class="fp-eyebrow">SECTION / 03 · FEATURED RECORD</div>
+    <h2 class="fp-heading">CASE STUDY<br>REFY-I · 1996</h2>
+
+    <div class="fp-card" onclick="showPage('project')">
+      <div class="fp-img">
+        <div class="fp-img-meta">
+          <div class="im-top">
+            <span>IMG_HERO</span>
+            <span>12.68°N · 101.28°E</span>
+          </div>
+          <div class="im-code">REFY-I / RAYONG.TH / 1996.07 → 2000.08</div>
+        </div>
+      </div>
+      <div class="fp-info">
+        <div class="fi-top">
+          <h3>TPI 150,000BPSD<br>Refinery (REFY-I)</h3>
+          <div class="fi-kr">정유/가스 · EPC · 태국 라용</div>
+
+          <div class="fp-specs">
+            <div class="fp-spec-row"><span class="sk">TYPE</span><span class="sv">정유/가스</span></div>
+            <div class="fp-spec-row"><span class="sk">COUNTRY</span><span class="sv">RAYONG · THAILAND</span></div>
+            <div class="fp-spec-row"><span class="sk">CLIENT</span><span class="sv">IRPC PCL</span></div>
+            <div class="fp-spec-row"><span class="sk">DURATION</span><span class="sv">1996.07 – 2000.08</span></div>
+            <div class="fp-spec-row"><span class="sk">CAPACITY</span><span class="sv">150,000 BPSD</span></div>
+            <div class="fp-spec-row"><span class="sk">METHOD</span><span class="sv">EPC Turnkey</span></div>
+          </div>
+        </div>
+        <div class="fp-cta">
+          <span class="fcta-label">VIEW FULL RECORD →</span>
+          <div class="fcta-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER 1 -->
+  <div id="footer">
+    <footer class="footer">
+      <div class="footer-menu-row">
+        <div class="foot-menu-grid">
+          <div class="foot-menu-col">
+            <a href="/Customer/CustomerSinmungo.aspx">사이버신문고</a>
+            <a href="/Service/Policy.aspx" class="privacy">개인정보처리방침</a>
+            <a href="/Service/EmailReject.aspx">이메일주소무단수집거부</a>
+            <a href="/Customer/CustomerQuestion.aspx">고객센터</a>
+          </div>
+          <div class="foot-menu-col">
+            <a href="/Service/Sitemap.aspx">사이트맵</a>
+            <a href="https://gsenc.nlobby.com" target="_blank">본사(그랑서울) 방문 예약</a>
+          </div>
+        </div>
+        <div class="foot-site-area">
+          <button class="btn-family" id="familyBtn" onclick="toggleFamily(event)">Family Site <span class="chevron">∧</span></button>
+          <div class="familyList" id="familyList">
+            <ul>
+              <li><div class="link_tit">Brand</div><div class="links"><a href="http://www.xi.co.kr/" target="_blank">Xi Korea</a></div></li>
+              <li><div class="link_tit">자회사</div><div class="links">
+                <a href="http://www.elysian.co.kr/" target="_blank">엘리시안</a>
+                <a href="http://www.xisnd.com/" target="_blank">자이S&amp;D</a>
+                <a href="http://www.xicna.com/" target="_blank">자이C&amp;A</a>
+                <a href="http://www.xiestec.co.kr/" target="_blank">자이에스텍</a>
+                <a href="https://www.heimlab.co.kr" target="_blank">하임랩</a>
+                <a href="http://www.zeitonm.com/" target="_blank">Zeit O&amp;M</a>
+              </div></li>
+              <li><div class="link_tit">B2B</div><div class="links">
+                <a href="http://www.gstpms.com/index.html" target="_blank">TPMS Portal</a>
+                <a href="https://www.withgsenc.com" target="_blank">조달 Portal</a>
+              </div></li>
+              <li><div class="link_tit">관계사</div><div class="links">
+                <a href="http://www.gs.co.kr/" target="_blank">(주)GS</a>
+                <a href="http://www.gsretail.com/" target="_blank">GS 리테일</a>
+                <a href="http://www.fcseoul.com/" target="_blank">GS 스포츠</a>
+                <a href="http://www.gscaltex.com/" target="_blank">GS 칼텍스</a>
+                <a href="http://www.gseps.com/" target="_blank">GS EPS</a>
+              </div></li>
+              <li><div class="link_tit">기타</div><div class="links">
+                <a href="http://www.gsencstory.com/" target="_blank">GS건설 아름다운이야기</a>
+                <a href="http://www.elysianlc.com/" target="_blank">용인엘리시안러닝센터</a>
+              </div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom-row">
+        <p class="foot-copy">ⓒGS E&amp;C Corp.</p>
+        <div class="foot-social">
+          <a href="https://www.youtube.com/@channelgsenc" target="_blank" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+          <a href="https://www.instagram.com/gsenc_official" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+          <a href="https://blog.naver.com/gsenc_official" target="_blank" aria-label="Naver Blog"><svg viewBox="0 0 24 24"><path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727z"/></svg></a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+</div><!-- /page-business -->
+
+<!-- ═══════════════════════════════
+     PAGE 2 — PROJECT DETAIL (TPI)
+═══════════════════════════════ -->
+<div class="page" id="page-project">
+
+  <!-- CINEMATIC HERO -->
+  <section class="proj-hero">
+    <div class="proj-hero-bg"></div>
+    <div class="ph-grid"></div>
+
+    <div class="ph-top">
+      <div class="ph-breadcrumb" onclick="showPage('business')">
+        <span class="crumb-back">사업영역</span>
+        <span class="crumb-arrow">›</span>
+        <span>PLANT</span>
+        <span class="crumb-arrow">›</span>
+        <span class="crumb-current">REFY-I</span>
+      </div>
+      <div class="ph-status">
+        <span class="badge archive">ARCHIVE</span>
+        <span class="badge complete">COMPLETED</span>
+      </div>
+    </div>
+
+    <div class="ph-content">
+      <div class="ph-project-code">PROJECT ID · REFY-I · RAYONG.TH · 1996</div>
+      <h1 class="ph-title">
+        TPI 150,000BPSD<br>Refinery
+        <span class="sub">태국 라용 소재 대규모 정유·가스 플랜트 / EPC 턴키 방식으로 수행된 복합 프로젝트</span>
+      </h1>
+      <div class="ph-tags">
+        <span class="ph-tag">PLANT</span>
+        <span class="ph-tag">정유 · 가스</span>
+        <span class="ph-tag">THAILAND</span>
+        <span class="ph-tag">EPC</span>
+        <span class="ph-tag">150,000 BPSD</span>
+      </div>
+    </div>
+
+    <div class="ph-databar">
+      <div class="ph-db-item"><span class="db-k">COORDINATE</span><span class="db-v">12.68°N 101.28°E</span></div>
+      <div class="ph-db-item"><span class="db-k">DURATION</span><span class="db-v">48 MONTHS</span></div>
+      <div class="ph-db-item"><span class="db-k">CAPACITY</span><span class="db-v">150,000 BPSD</span></div>
+      <div class="ph-db-item"><span class="db-k">STATUS</span><span class="db-v">COMPLETED · 2000.08</span></div>
+    </div>
+  </section>
+
+  <!-- PROJECT SPEC DATASHEET -->
+  <section class="proj-spec">
+    <div class="ps-hd">
+      <div>
+        <div class="ps-eyebrow">SECTION / 01 · PROJECT DATA</div>
+        <h2>SPECIFICATION<br>DATASHEET</h2>
+      </div>
+      <p class="ps-desc">프로젝트 기본 정보는 GS E&amp;C 공식 레퍼런스를 기반으로 합니다. 공사 구분·국가·발주처·기간은 공식 아카이브 확인 필드입니다.</p>
+    </div>
+
+    <div class="ps-table">
+      <div class="ps-row">
+        <div class="psr-idx">01</div>
+        <div class="psr-label">PROJECT TYPE / 구분</div>
+        <div class="psr-value">정유 / 가스 <span class="en">· Refinery & Gas Processing</span></div>
+      </div>
+      <div class="ps-row">
+        <div class="psr-idx">02</div>
+        <div class="psr-label">LOCATION / 국가·위치</div>
+        <div class="psr-value">태국 라용 <span class="en">· Rayong, Thailand</span></div>
+      </div>
+      <div class="ps-row">
+        <div class="psr-idx">03</div>
+        <div class="psr-label">CLIENT / 발주처</div>
+        <div class="psr-value">IRPC PCL <span class="en">· Thai Petrochemical Industry PCL</span></div>
+      </div>
+      <div class="ps-row">
+        <div class="psr-idx">04</div>
+        <div class="psr-label">DURATION / 공사기간</div>
+        <div class="psr-value">1996.07 – 2000.08 <span class="en">· 49 months</span></div>
+      </div>
+      <div class="ps-row">
+        <div class="psr-idx">05</div>
+        <div class="psr-label">CAPACITY / 설비용량</div>
+        <div class="psr-value">150,000 BPSD <span class="en">· Barrels Per Stream Day</span></div>
+      </div>
+      <div class="ps-row">
+        <div class="psr-idx">06</div>
+        <div class="psr-label">METHOD / 수행방식</div>
+        <div class="psr-value">EPC Turnkey <span class="en">· Engineering · Procurement · Construction</span></div>
+      </div>
+      <div class="ps-row full">
+        <div class="psr-idx">07</div>
+        <div class="psr-label">OVERVIEW / 공사개요</div>
+        <div class="psr-value">태국 라용에 위치한 대규모 정유 플랜트 프로젝트로, 일일 150,000배럴 처리 용량의 원유 정제 및 가스 처리 시설을 EPC 턴키 방식으로 수행. 상세 엔지니어링부터 기자재 조달, 시공·시운전까지 전 공정을 단일 계약으로 통합 관리하여 공기 단축과 품질 확보를 동시에 달성한 GS건설의 해외 플랜트 레퍼런스 프로젝트입니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECT METRICS DASHBOARD -->
+  <section class="proj-metrics">
+    <div class="pm-hd">
+      <div>
+        <div class="pm-eyebrow">SECTION / 02 · IMPACT METRICS</div>
+        <h2>TECHNICAL<br>HIGHLIGHTS</h2>
+      </div>
+      <div class="pm-disclaimer">
+        <b>※ 추정치 기반 표시 데이터</b><br>
+        일부 수치는 업계 평균 EPC 프로젝트 기준으로 산출된 참고용 추정값입니다.
+      </div>
+    </div>
+
+    <div class="pm-grid">
+      <div class="pm-card">
+        <div class="pm-head">
+          <span class="pm-k">SPECIAL METHOD / 특수 공법</span>
+          <span class="pm-badge">CONFIRMED</span>
+        </div>
+        <div>
+          <div class="pm-big"><span class="counter" data-to="7">0</span><span class="pm-unit">METHODS</span></div>
+          <p class="pm-desc">CDU(원유상압증류) 공정 효율화를 포함한 7개 핵심 EPC 공법이 단일 프로젝트에 통합 적용되었습니다.</p>
+        </div>
+      </div>
+
+      <div class="pm-card">
+        <div class="pm-head">
+          <span class="pm-k">CO₂ REDUCTION / 탄소 절감</span>
+          <span class="pm-badge est">ESTIMATED</span>
+        </div>
+        <div>
+          <div class="pm-big">≈<span class="counter" data-to="120">0</span><span class="pm-unit">K tCO₂e</span></div>
+          <p class="pm-desc">EPC 공정 효율화 및 에너지 회수 시스템 적용으로 산출된 업계 평균 기준 추정 절감량 (연간 환산 기준).</p>
+          <div class="pm-bar" style="--pct:72%"></div>
+          <div class="pm-bar-meta"><span>VS BASELINE</span><span>−72%</span></div>
+        </div>
+      </div>
+
+      <div class="pm-card">
+        <div class="pm-head">
+          <span class="pm-k">JOBS CREATED / 창출 일자리</span>
+          <span class="pm-badge">CONFIRMED</span>
+        </div>
+        <div>
+          <div class="pm-big"><span class="counter" data-to="2000" data-suffix="+">0</span></div>
+          <p class="pm-desc">피크 공기 기준 현장 인력 및 협력사 포함, 2,000명 이상의 현지·해외 일자리가 창출되었습니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPLIT SCROLLYTELLING TIMELINE -->
+  <section class="proj-timeline">
+    <div class="pt-hd">
+      <div>
+        <div class="pt-eyebrow">SECTION / 03 · PROJECT LOG</div>
+        <h2>TIMELINE<br>1996 → 2000</h2>
+      </div>
+      <p>스크롤에 따라 좌측 인덱스가 갱신됩니다. 총 5개 단계의 공사 로그를 순차적으로 확인할 수 있습니다.</p>
+    </div>
+
+    <div class="pt-split">
+      <!-- Sticky left panel -->
+      <div class="pt-left">
+        <div class="pt-stamp">
+          <span><span class="live-dot"></span>PROJECT LOG</span>
+          <span id="ptStampDate">REFY-I</span>
+        </div>
+
+        <div class="pt-stage-display">
+          <div class="pt-idx-big" id="ptIdx">STAGE 01 / 05</div>
+          <div class="pt-year" id="ptYear">1996.07</div>
+          <div class="pt-stage-title" id="ptTitle">계약 / 착공</div>
+          <div class="pt-stage-desc" id="ptDesc">발주처 IRPC와의 EPC 계약 체결 및 현장 착공. 프로젝트 기준선 설정과 초기 조직 구성이 이루어졌습니다.</div>
+        </div>
+
+        <div class="pt-progress-wrap">
+          <div class="pt-progress-meta">
+            <span id="ptProgLabel">01 / 05</span>
+            <span class="total">100%</span>
+          </div>
+          <div class="pt-progress-bar" id="ptBar" style="--pt-pct:20%"></div>
+          <div class="pt-dots" id="ptDots">
+            <div class="pt-dot active"></div>
+            <div class="pt-dot"></div>
+            <div class="pt-dot"></div>
+            <div class="pt-dot"></div>
+            <div class="pt-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right scenes -->
+      <div class="pt-right">
+        <div class="pt-scene" data-idx="1" data-year="1996.07" data-title="계약 / 착공" data-desc="발주처 IRPC와의 EPC 계약 체결 및 현장 착공. 프로젝트 기준선 설정과 초기 조직 구성이 이루어졌습니다.">
+          <div class="pt-scene-mobile-meta">
+            <div class="ptm-idx">STAGE 01 / 05</div>
+            <div class="ptm-year">1996.07</div>
+            <div class="ptm-title">계약 / 착공</div>
+            <div class="ptm-desc">발주처 IRPC와의 EPC 계약 체결 및 현장 착공. 프로젝트 기준선 설정과 초기 조직 구성이 이루어졌습니다.</div>
+          </div>
+          <div class="pt-scene-img" data-caption="IMG_S01 · SITE MOBILIZATION">
+            <img src="https://images.pexels.com/photos/9407367/pexels-photo-9407367.jpeg?auto=compress&cs=tinysrgb&w=1400&h=900&fit=crop" alt="Site">
+          </div>
+          <div class="pt-scene-meta">
+            <span><b>01</b> · STAGE</span><span><b>1996.07</b></span><span>KICK-OFF</span>
+          </div>
+        </div>
+
+        <div class="pt-scene" data-idx="2" data-year="1996–97" data-title="설계 단계" data-desc="상세 엔지니어링 및 공정 설계. FEED 결과를 바탕으로 CDU 포함 단위 공정의 detail design이 진행되었습니다.">
+          <div class="pt-scene-mobile-meta">
+            <div class="ptm-idx">STAGE 02 / 05</div>
+            <div class="ptm-year">1996–97</div>
+            <div class="ptm-title">설계 단계</div>
+            <div class="ptm-desc">상세 엔지니어링 및 공정 설계. FEED 결과를 바탕으로 CDU 포함 단위 공정의 detail design이 진행되었습니다.</div>
+          </div>
+          <div class="pt-scene-img" data-caption="IMG_S02 · ENGINEERING">
+            <img src="https://images.pexels.com/photos/3229014/pexels-photo-3229014.jpeg?auto=compress&cs=tinysrgb&w=1400&h=900&fit=crop" alt="Design">
+          </div>
+          <div class="pt-scene-meta">
+            <span><b>02</b> · STAGE</span><span><b>1996–97</b></span><span>ENGINEERING</span>
+          </div>
+        </div>
+
+        <div class="pt-scene" data-idx="3" data-year="1997–98" data-title="조달 / 기초공사" data-desc="주요 기자재 글로벌 조달과 함께 토목·기초공사 병행. 파이프랙 및 주요 설비 기반이 완성되었습니다.">
+          <div class="pt-scene-mobile-meta">
+            <div class="ptm-idx">STAGE 03 / 05</div>
+            <div class="ptm-year">1997–98</div>
+            <div class="ptm-title">조달 / 기초공사</div>
+            <div class="ptm-desc">주요 기자재 글로벌 조달과 함께 토목·기초공사 병행. 파이프랙 및 주요 설비 기반이 완성되었습니다.</div>
+          </div>
+          <div class="pt-scene-img" data-caption="IMG_S03 · PROCUREMENT">
+            <img src="https://images.pexels.com/photos/15970032/pexels-photo-15970032.jpeg?auto=compress&cs=tinysrgb&w=1400&h=900&fit=crop" alt="Procurement">
+          </div>
+          <div class="pt-scene-meta">
+            <span><b>03</b> · STAGE</span><span><b>1997–98</b></span><span>PROCUREMENT</span>
+          </div>
+        </div>
+
+        <div class="pt-scene" data-idx="4" data-year="1998–99" data-title="구조물 / 설치" data-desc="주요 구조물 및 공정 설비 설치. 피크 공기 기준 2,000명 이상의 현지·해외 인력이 투입되었습니다.">
+          <div class="pt-scene-mobile-meta">
+            <div class="ptm-idx">STAGE 04 / 05</div>
+            <div class="ptm-year">1998–99</div>
+            <div class="ptm-title">구조물 / 설치</div>
+            <div class="ptm-desc">주요 구조물 및 공정 설비 설치. 피크 공기 기준 2,000명 이상의 현지·해외 인력이 투입되었습니다.</div>
+          </div>
+          <div class="pt-scene-img" data-caption="IMG_S04 · INSTALLATION">
+            <img src="https://images.pexels.com/photos/5884386/pexels-photo-5884386.jpeg?auto=compress&cs=tinysrgb&w=1400&h=900&fit=crop" alt="Install">
+          </div>
+          <div class="pt-scene-meta">
+            <span><b>04</b> · STAGE</span><span><b>1998–99</b></span><span>INSTALLATION</span>
+          </div>
+        </div>
+
+        <div class="pt-scene" data-idx="5" data-year="2000.08" data-title="시운전 / 준공" data-desc="시운전 완료 및 최종 준공. 일일 150,000배럴 처리 용량 달성 후 발주처에 공식 인계되었습니다.">
+          <div class="pt-scene-mobile-meta">
+            <div class="ptm-idx">STAGE 05 / 05</div>
+            <div class="ptm-year">2000.08</div>
+            <div class="ptm-title">시운전 / 준공</div>
+            <div class="ptm-desc">시운전 완료 및 최종 준공. 일일 150,000배럴 처리 용량 달성 후 발주처에 공식 인계되었습니다.</div>
+          </div>
+          <div class="pt-scene-img" data-caption="IMG_S05 · HANDOVER">
+            <img src="https://images.pexels.com/photos/10407689/pexels-photo-10407689.jpeg?auto=compress&cs=tinysrgb&w=1400&h=900&fit=crop" alt="Handover">
+          </div>
+          <div class="pt-scene-meta">
+            <span><b>05</b> · STAGE</span><span><b>2000.08</b></span><span>HANDOVER</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="proj-gallery">
+    <div class="pg-hd">
+      <div>
+        <div class="pg-eyebrow">SECTION / 04 · VISUAL RECORD</div>
+        <h2>ARCHIVE<br>IMAGES</h2>
+      </div>
+      <div class="pg-count">[ 05 / 05 ITEMS ]</div>
+    </div>
+
+    <div class="pg-grid">
+      <div class="pg-item pg-1">
+        <img src="https://images.pexels.com/photos/10407684/pexels-photo-10407684.jpeg?auto=compress&cs=tinysrgb&w=1400&h=1000&fit=crop" alt="Night plant">
+        <div class="pg-meta"><span class="pg-id">IMG_001</span><span class="pg-coord">12.68°N · 101.28°E</span></div>
+      </div>
+      <div class="pg-item pg-2">
+        <img src="https://images.pexels.com/photos/15970032/pexels-photo-15970032.jpeg?auto=compress&cs=tinysrgb&w=1400&h=700&fit=crop" alt="Pipes">
+        <div class="pg-meta"><span class="pg-id">IMG_002</span><span class="pg-coord">RAYONG · TH</span></div>
+      </div>
+      <div class="pg-item pg-3">
+        <img src="https://images.pexels.com/photos/5884386/pexels-photo-5884386.jpeg?auto=compress&cs=tinysrgb&w=640&h=500&fit=crop" alt="Pipes detail">
+        <div class="pg-meta"><span class="pg-id">IMG_003</span><span class="pg-coord">INTERIOR</span></div>
+      </div>
+      <div class="pg-item pg-4">
+        <img src="https://images.pexels.com/photos/9407367/pexels-photo-9407367.jpeg?auto=compress&cs=tinysrgb&w=640&h=500&fit=crop" alt="Industrial">
+        <div class="pg-meta"><span class="pg-id">IMG_004</span><span class="pg-coord">DRONE · AIR</span></div>
+      </div>
+      <div class="pg-item pg-5">
+        <img src="https://images.pexels.com/photos/3044479/pexels-photo-3044479.jpeg?auto=compress&cs=tinysrgb&w=640&h=500&fit=crop" alt="Sunset plant">
+        <div class="pg-meta"><span class="pg-id">IMG_005</span><span class="pg-coord">SUNSET · W</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BACK NAV -->
+  <div class="back-nav" onclick="showPage('business')">
+    <div class="bn-left">
+      <div class="bn-arrow"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+      <div class="bn-label">RETURN TO INDEX<b>사업영역으로 돌아가기</b></div>
+    </div>
+    <div class="bn-stamp">
+      REFY-I · ARCHIVE<br>
+      END OF RECORD
+    </div>
+  </div>
+
+  <!-- FOOTER 2 -->
+  <div id="footer2">
+    <footer class="footer">
+      <div class="footer-menu-row">
+        <div class="foot-menu-grid">
+          <div class="foot-menu-col">
+            <a href="/Customer/CustomerSinmungo.aspx">사이버신문고</a>
+            <a href="/Service/Policy.aspx" class="privacy">개인정보처리방침</a>
+            <a href="/Service/EmailReject.aspx">이메일주소무단수집거부</a>
+            <a href="/Customer/CustomerQuestion.aspx">고객센터</a>
+          </div>
+          <div class="foot-menu-col">
+            <a href="/Service/Sitemap.aspx">사이트맵</a>
+            <a href="https://gsenc.nlobby.com" target="_blank">본사(그랑서울) 방문 예약</a>
+          </div>
+        </div>
+        <div class="foot-site-area">
+          <button class="btn-family" id="familyBtn2" onclick="toggleFamily2(event)">Family Site <span class="chevron">∧</span></button>
+          <div class="familyList" id="familyList2">
+            <ul>
+              <li><div class="link_tit">Brand</div><div class="links"><a href="http://www.xi.co.kr/" target="_blank">Xi Korea</a></div></li>
+              <li><div class="link_tit">자회사</div><div class="links">
+                <a href="http://www.elysian.co.kr/" target="_blank">엘리시안</a>
+                <a href="http://www.xisnd.com/" target="_blank">자이S&amp;D</a>
+                <a href="http://www.xicna.com/" target="_blank">자이C&amp;A</a>
+                <a href="http://www.xiestec.co.kr/" target="_blank">자이에스텍</a>
+                <a href="https://www.heimlab.co.kr" target="_blank">하임랩</a>
+                <a href="http://www.zeitonm.com/" target="_blank">Zeit O&amp;M</a>
+              </div></li>
+              <li><div class="link_tit">B2B</div><div class="links">
+                <a href="http://www.gstpms.com/index.html" target="_blank">TPMS Portal</a>
+                <a href="https://www.withgsenc.com" target="_blank">조달 Portal</a>
+              </div></li>
+              <li><div class="link_tit">관계사</div><div class="links">
+                <a href="http://www.gs.co.kr/" target="_blank">(주)GS</a>
+                <a href="http://www.gsretail.com/" target="_blank">GS 리테일</a>
+                <a href="http://www.fcseoul.com/" target="_blank">GS 스포츠</a>
+                <a href="http://www.gscaltex.com/" target="_blank">GS 칼텍스</a>
+                <a href="http://www.gseps.com/" target="_blank">GS EPS</a>
+              </div></li>
+              <li><div class="link_tit">기타</div><div class="links">
+                <a href="http://www.gsencstory.com/" target="_blank">GS건설 아름다운이야기</a>
+                <a href="http://www.elysianlc.com/" target="_blank">용인엘리시안러닝센터</a>
+              </div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom-row">
+        <p class="foot-copy">ⓒGS E&amp;C Corp.</p>
+        <div class="foot-social">
+          <a href="https://www.youtube.com/@channelgsenc" target="_blank" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+          <a href="https://www.instagram.com/gsenc_official" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+          <a href="https://blog.naver.com/gsenc_official" target="_blank" aria-label="Naver Blog"><svg viewBox="0 0 24 24"><path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727z"/></svg></a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+</div><!-- /page-project -->
+
+<script>
+/* ═══════════════════════════════
+   1. PAGE SWITCHING
+═══════════════════════════════ */
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const el = document.getElementById('page-'+name);
+  if(el) el.classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+  // Re-trigger GNB state calc after page switch
+  setTimeout(updateGnbState,50);
+  // Re-trigger count-up animations
+  setTimeout(initCounters,100);
+}
+
+/* ═══════════════════════════════
+   2. GNB SCROLL STATE
+═══════════════════════════════ */
+const gnb = document.getElementById('gnb');
+function updateGnbState(){
+  const y = window.scrollY;
+  if(y > 30){
+    gnb.classList.add('scrolled');
+    gnb.classList.remove('light-text');
+    gnb.classList.remove('dark-text');
+    // Determine current section bg brightness
+    const activePage = document.querySelector('.page.active');
+    if(!activePage) return;
+    // Scan sections under GNB (y+64)
+    const probeY = y + 80;
+    const sections = activePage.querySelectorAll('section, .back-nav');
+    let currentBg = 'light';
+    sections.forEach(s=>{
+      const rect = s.getBoundingClientRect();
+      const absTop = rect.top + y;
+      const absBot = absTop + rect.height;
+      if(probeY >= absTop && probeY < absBot){
+        const cls = s.className;
+        // Dark sections: biz-hero, live-metrics, proj-hero, proj-metrics, back-nav
+        if(cls.includes('biz-hero') || cls.includes('live-metrics') ||
+           cls.includes('proj-hero') || cls.includes('proj-metrics') ||
+           cls.includes('back-nav')){
+          currentBg = 'dark';
+        }
+      }
+    });
+    gnb.classList.add(currentBg === 'dark' ? 'light-text' : 'dark-text');
+  } else {
+    gnb.classList.remove('scrolled');
+    gnb.classList.add('light-text');
+    gnb.classList.remove('dark-text');
+  }
+}
+updateGnbState();
+window.addEventListener('scroll', updateGnbState, {passive:true});
+
+/* ═══════════════════════════════
+   3. LIVE CLOCK
+═══════════════════════════════ */
+function updateClock(){
+  const el = document.getElementById('heroClock');
+  if(!el) return;
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  const hh = String(d.getHours()).padStart(2,'0');
+  const mi = String(d.getMinutes()).padStart(2,'0');
+  const ss = String(d.getSeconds()).padStart(2,'0');
+  el.textContent = `${yyyy}.${mm}.${dd} · ${hh}:${mi}:${ss} KST`;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+/* ═══════════════════════════════
+   4. TICKER POPULATION
+═══════════════════════════════ */
+(function buildTicker(){
+  const t = document.getElementById('tickerInner');
+  if(!t) return;
+  const items = [
+    ['REVENUE','₩19.9','TRN KRW'],
+    ['PROJECTS','60','CONCURRENT'],
+    ['CREDIT','A','KR/STABLE'],
+    ['COUNTRIES','50','ACTIVE'],
+    ['SECTORS','06','INDEX'],
+    ['HQ','SEOUL','37.5665°N'],
+    ['FOUNDED','1969','GS E&amp;C'],
+    ['FAMILY','Xi','BRAND']
+  ];
+  // Generate content twice for seamless loop
+  const html = items.map(([k,v,u])=>
+    `<span><em>${k}</em><b>${v}</b> ${u}</span><span class="ticker-sep">/</span>`
+  ).join('');
+  t.innerHTML = html + html;
+})();
+
+/* ═══════════════════════════════
+   5. COUNT-UP ANIMATION
+═══════════════════════════════ */
+function initCounters(){
+  document.querySelectorAll('.counter').forEach(el=>{
+    if(el.dataset.done) return;
+    const target = parseFloat(el.dataset.to);
+    const suffix = el.dataset.suffix || '';
+    const isFloat = String(target).includes('.') || el.dataset.to === '19.9';
+    const io = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting && !el.dataset.done){
+          el.dataset.done = '1';
+          const duration = 1600;
+          const start = performance.now();
+          function frame(now){
+            const p = Math.min((now-start)/duration, 1);
+            const eased = 1 - Math.pow(1-p, 3);
+            const cur = target * eased;
+            el.textContent = (isFloat ? cur.toFixed(1) : Math.round(cur)) + suffix;
+            if(p < 1) requestAnimationFrame(frame);
+          }
+          requestAnimationFrame(frame);
+          io.unobserve(el);
+        }
+      });
+    }, {threshold:0.4});
+    io.observe(el);
+  });
+}
+initCounters();
+
+/* ═══════════════════════════════
+   6. CURSOR-FOLLOW PREVIEW
+═══════════════════════════════ */
+(function cursorPreview(){
+  const preview = document.getElementById('bizPreview');
+  if(!preview) return;
+  const pImg = preview.querySelector('img');
+  let currentSrc = '';
+  let tx = 0, ty = 0, cx = 0, cy = 0;
+  let rafId = null;
+
+  function animate(){
+    cx += (tx - cx) * 0.18;
+    cy += (ty - cy) * 0.18;
+    preview.style.left = cx + 'px';
+    preview.style.top = cy + 'px';
+    rafId = requestAnimationFrame(animate);
+  }
+
+  document.querySelectorAll('.biz-row').forEach(row=>{
+    row.addEventListener('mouseenter', ()=>{
+      const src = row.dataset.img;
+      const label = row.dataset.label || '';
+      if(src !== currentSrc){
+        pImg.src = src;
+        currentSrc = src;
+      }
+      preview.setAttribute('data-label', label);
+      preview.classList.add('show');
+      if(!rafId) animate();
+    });
+    row.addEventListener('mouseleave', ()=>{
+      preview.classList.remove('show');
+    });
+    row.addEventListener('mousemove', (e)=>{
+      tx = e.clientX;
+      ty = e.clientY;
+      // On first move, set without easing
+      if(Math.abs(cx - tx) > 200 || Math.abs(cy - ty) > 200){
+        cx = tx; cy = ty;
+      }
+    });
+  });
+})();
+
+/* ═══════════════════════════════
+   7. SPLIT SCROLLYTELLING TIMELINE
+═══════════════════════════════ */
+(function splitTimeline(){
+  const scenes = document.querySelectorAll('.pt-scene');
+  if(!scenes.length) return;
+
+  const ptIdx = document.getElementById('ptIdx');
+  const ptYear = document.getElementById('ptYear');
+  const ptTitle = document.getElementById('ptTitle');
+  const ptDesc = document.getElementById('ptDesc');
+  const ptProgLabel = document.getElementById('ptProgLabel');
+  const ptBar = document.getElementById('ptBar');
+  const ptDots = document.querySelectorAll('.pt-dot');
+
+  function setActive(idx){
+    const scene = scenes[idx-1];
+    if(!scene) return;
+
+    // Update left panel
+    ptIdx.textContent = `STAGE ${String(idx).padStart(2,'0')} / 05`;
+    ptYear.style.opacity = '0';
+    ptYear.style.transform = 'translateY(12px)';
+    ptTitle.style.opacity = '0';
+    ptTitle.style.transform = 'translateY(12px)';
+    ptDesc.style.opacity = '0';
+
+    setTimeout(()=>{
+      ptYear.textContent = scene.dataset.year;
+      ptTitle.textContent = scene.dataset.title;
+      ptDesc.textContent = scene.dataset.desc;
+      ptYear.style.opacity = '1';
+      ptYear.style.transform = 'translateY(0)';
+      ptTitle.style.opacity = '1';
+      ptTitle.style.transform = 'translateY(0)';
+      ptDesc.style.opacity = '1';
+    }, 180);
+
+    ptProgLabel.textContent = `${String(idx).padStart(2,'0')} / 05`;
+    ptBar.style.setProperty('--pt-pct', (idx*20) + '%');
+    ptDots.forEach((d,i)=>{
+      d.classList.toggle('active', i < idx);
+    });
+
+    scenes.forEach((s,i)=> s.classList.toggle('in-view', i === idx-1));
+  }
+
+  const io = new IntersectionObserver((entries)=>{
+    // Pick entry closest to viewport center
+    let best = null;
+    let bestDist = Infinity;
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const rect = e.target.getBoundingClientRect();
+        const center = rect.top + rect.height/2;
+        const dist = Math.abs(center - window.innerHeight/2);
+        if(dist < bestDist){
+          bestDist = dist;
+          best = e.target;
+        }
+      }
+    });
+    if(best){
+      const idx = parseInt(best.dataset.idx, 10);
+      setActive(idx);
+    }
+  }, {
+    threshold: [0.3, 0.5, 0.7],
+    rootMargin: '-20% 0px -20% 0px'
+  });
+
+  scenes.forEach(s=> io.observe(s));
+  setActive(1);
+})();
+
+/* ═══════════════════════════════
+   8. FAMILY SITE TOGGLE
+═══════════════════════════════ */
+function toggleFamily(e){
+  e.preventDefault();
+  const list = document.getElementById('familyList');
+  const btn  = document.getElementById('familyBtn');
+  list.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+function toggleFamily2(e){
+  e.preventDefault();
+  const list = document.getElementById('familyList2');
+  const btn  = document.getElementById('familyBtn2');
+  if(!list) return;
+  list.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+document.addEventListener('click', e=>{
+  ['','2'].forEach(suffix=>{
+    const btn  = document.getElementById('familyBtn' + suffix);
+    const list = document.getElementById('familyList' + suffix);
+    if(btn && list && !e.target.closest('#familyBtn'+suffix) && !e.target.closest('#familyList'+suffix)){
+      list.classList.remove('open');
+      btn.classList.remove('open');
+    }
+  });
+});
+
+/* ═══════════════════════════════
+   9. MOBILE NAV OVERLAY
+═══════════════════════════════ */
+function openMobileNav(){
+  const nav = document.getElementById('mobileNav');
+  if(!nav) return;
+  nav.classList.add('open');
+  document.body.classList.add('nav-open');
+}
+function closeMobileNav(){
+  const nav = document.getElementById('mobileNav');
+  if(!nav) return;
+  nav.classList.remove('open');
+  document.body.classList.remove('nav-open');
+}
+(function mobileNavInit(){
+  const closeBtn = document.getElementById('mnClose');
+  if(closeBtn) closeBtn.addEventListener('click', closeMobileNav);
+
+  // Sub-accordion toggles
+  document.querySelectorAll('.mn-row[data-toggle]').forEach(row=>{
+    row.addEventListener('click', ()=>{
+      const li = row.parentElement;
+      li.classList.toggle('open');
+    });
+  });
+
+  // ESC to close
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'Escape'){
+      closeMobileNav();
+    }
+  });
+})();
+
+/* ═══════════════════════════════
+   10. DRAG-TO-SCROLL (마우스를 손가락처럼)
+   데스크탑 프리뷰에서 iframe 내부를 마우스 드래그로
+   스크롤할 수 있게 함. 모바일 터치와 동일한 감각.
+═══════════════════════════════ */
+(function dragToScroll(){
+  // Activate mode: always-on. Works alongside normal wheel scroll.
+  document.body.classList.add('touch-sim');
+
+  let isDown = false;
+  let startX = 0, startY = 0;
+  let scrollStartX = 0, scrollStartY = 0;
+  let moved = false;
+  const THRESHOLD = 5; // px before considering it a drag
+
+  // Momentum
+  let velocityY = 0, velocityX = 0;
+  let lastY = 0, lastX = 0, lastT = 0;
+  let momentumRaf = null;
+
+  function cancelMomentum(){
+    if(momentumRaf){ cancelAnimationFrame(momentumRaf); momentumRaf = null; }
+  }
+
+  function onDown(e){
+    // Ignore right-click, middle-click
+    if(e.button !== 0) return;
+    // Ignore clicks on interactive elements where native behavior is preferred
+    const tag = e.target.tagName;
+    if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    // Ignore when mobile nav is open — let it scroll natively
+    if(document.body.classList.contains('nav-open')){
+      // Allow native scroll on overlay
+      const overlay = document.getElementById('mobileNav');
+      if(overlay && overlay.contains(e.target)) return;
+    }
+
+    cancelMomentum();
+    isDown = true;
+    moved = false;
+    startX = e.clientX;
+    startY = e.clientY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    lastT = performance.now();
+    scrollStartX = window.scrollX;
+    scrollStartY = window.scrollY;
+    velocityX = 0;
+    velocityY = 0;
+  }
+
+  function onMove(e){
+    if(!isDown) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    if(!moved && (Math.abs(dx) > THRESHOLD || Math.abs(dy) > THRESHOLD)){
+      moved = true;
+      document.body.classList.add('dragging');
+    }
+    if(moved){
+      window.scrollTo(scrollStartX - dx, scrollStartY - dy);
+
+      // Track velocity for momentum
+      const now = performance.now();
+      const dt = now - lastT;
+      if(dt > 0){
+        velocityX = (e.clientX - lastX) / dt;
+        velocityY = (e.clientY - lastY) / dt;
+      }
+      lastX = e.clientX;
+      lastY = e.clientY;
+      lastT = now;
+
+      e.preventDefault();
+    }
+  }
+
+  function onUp(e){
+    if(!isDown) return;
+    isDown = false;
+    document.body.classList.remove('dragging');
+
+    if(moved){
+      // Apply momentum — inverse of drag
+      let vx = -velocityX * 16; // px per frame-ish
+      let vy = -velocityY * 16;
+      function step(){
+        if(Math.abs(vx) < 0.3 && Math.abs(vy) < 0.3){ momentumRaf = null; return; }
+        window.scrollBy(vx, vy);
+        vx *= 0.94;
+        vy *= 0.94;
+        momentumRaf = requestAnimationFrame(step);
+      }
+      if(Math.abs(vx) > 0.5 || Math.abs(vy) > 0.5){
+        momentumRaf = requestAnimationFrame(step);
+      }
+
+      // Suppress the subsequent click after drag
+      const captureClick = (ev)=>{
+        ev.stopPropagation();
+        ev.preventDefault();
+        document.removeEventListener('click', captureClick, true);
+      };
+      document.addEventListener('click', captureClick, true);
+    }
+  }
+
+  // Listeners on window, not body, so they fire even outside element bounds
+  window.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  window.addEventListener('mouseleave', onUp);
+})();
+</script>
+
+</body>
+</html>

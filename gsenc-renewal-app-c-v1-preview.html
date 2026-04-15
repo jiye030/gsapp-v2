@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>App Preview · GS건설 Renewal C안 v1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:        #0a0c0e;
+      --panel:     #14171a;
+      --line:      #22272c;
+      --line-2:    #2d3338;
+      --text:      #e6e8ea;
+      --text-mid:  #8a9098;
+      --text-dim:  #555c64;
+      --device:    #1a1d20;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; }
+    body {
+      font-family:'Noto Sans KR', sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* ─── LAYOUT ─── */
+    .app {
+      display:grid;
+      grid-template-rows:64px 1fr;
+      height:100vh;
+      height:100dvh;
+    }
+
+    /* ─── TOP BAR ─── */
+    .topbar {
+      display:flex;
+      align-items:center;
+      gap:18px;
+      padding:0 24px;
+      background:var(--panel);
+      border-bottom:1px solid var(--line);
+    }
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:11px;
+      flex-shrink:0;
+    }
+    .brand-mark {
+      width:28px; height:28px;
+      border:1px solid var(--line-2);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .brand-mark svg { width:14px; height:14px; stroke:var(--text); fill:none; stroke-width:1.5; }
+    .brand-text {
+      display:flex; flex-direction:column;
+      line-height:1.2;
+    }
+    .brand-name {
+      font-family:'Titillium Web', sans-serif;
+      font-size:11px; font-weight:600;
+      letter-spacing:1.5px; text-transform:uppercase;
+      color:var(--text);
+    }
+    .brand-sub {
+      font-size:10px; font-weight:300;
+      color:var(--text-dim); letter-spacing:0.3px;
+    }
+
+    .divider {
+      width:1px; height:28px;
+      background:var(--line-2);
+      flex-shrink:0;
+    }
+
+    /* Device chips */
+    .device-list {
+      display:flex;
+      gap:6px;
+      flex:1;
+      overflow-x:auto;
+      scrollbar-width:none;
+    }
+    .device-list::-webkit-scrollbar { display:none; }
+
+    .chip {
+      flex-shrink:0;
+      padding:8px 14px;
+      background:transparent;
+      border:1px solid var(--line-2);
+      color:var(--text-mid);
+      font-family:'Noto Sans KR', sans-serif;
+      font-size:11.5px;
+      font-weight:400;
+      letter-spacing:0.2px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .chip:hover {
+      border-color:#3a4147;
+      color:var(--text);
+    }
+    .chip.active {
+      background:var(--text);
+      border-color:var(--text);
+      color:var(--bg);
+      font-weight:500;
+    }
+    .chip-dim {
+      font-family:'Titillium Web', sans-serif;
+      font-size:10px;
+      font-weight:400;
+      opacity:0.55;
+      letter-spacing:0.5px;
+    }
+
+    /* Action buttons */
+    .actions {
+      display:flex;
+      gap:6px;
+      flex-shrink:0;
+    }
+    .iconbtn {
+      width:36px; height:36px;
+      background:transparent;
+      border:1px solid var(--line-2);
+      color:var(--text-mid);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:border-color 0.2s, color 0.2s;
+    }
+    .iconbtn:hover {
+      border-color:#3a4147;
+      color:var(--text);
+    }
+    .iconbtn:active { transform:translateY(1px); }
+    .iconbtn svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.5; }
+    .iconbtn.spinning svg { animation:spin 0.6s cubic-bezier(0.25,0.46,0.45,0.94); }
+    @keyframes spin {
+      from { transform:rotate(0deg); }
+      to   { transform:rotate(360deg); }
+    }
+
+    /* ─── STAGE ─── */
+    .stage {
+      position:relative;
+      overflow:auto;
+      background:
+        radial-gradient(ellipse at center, rgba(255,255,255,0.025) 0%, transparent 60%),
+        var(--bg);
+    }
+    /* 미세한 그리드 */
+    .stage::before {
+      content:'';
+      position:absolute;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size:32px 32px;
+      pointer-events:none;
+    }
+
+    .stage-inner {
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:48px 32px 96px;
+      position:relative;
+    }
+
+    /* ─── DEVICE FRAME ─── */
+    .device {
+      position:relative;
+      background:var(--device);
+      border-radius:48px;
+      padding:14px;
+      box-shadow:
+        0 0 0 1.5px #2a2f34,
+        0 0 0 3px #14181b,
+        0 24px 60px -12px rgba(0,0,0,0.7),
+        0 8px 24px -8px rgba(0,0,0,0.5);
+      transition:transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+      flex-shrink:0;
+    }
+    /* 사이드 버튼 (세로 모드 기본) */
+    .device::before,
+    .device::after {
+      content:'';
+      position:absolute;
+      background:#2a2f34;
+      pointer-events:none;
+    }
+    .device::before {
+      /* 좌측: 무음 + 볼륨업 + 볼륨다운 */
+      left:-2px;
+      top:118px;
+      width:3px;
+      height:24px;
+      box-shadow:
+        0 42px 0 #2a2f34,
+        0 42px 0 0px #2a2f34,
+        0 84px 0 #2a2f34;
+      border-radius:2px 0 0 2px;
+    }
+    .device::after {
+      /* 우측: 전원 */
+      right:-2px;
+      top:148px;
+      width:3px;
+      height:64px;
+      border-radius:0 2px 2px 0;
+    }
+
+    .screen {
+      position:relative;
+      background:#000;
+      border-radius:36px;
+      overflow:hidden;
+    }
+    /* Dynamic Island */
+    .notch {
+      position:absolute;
+      top:10px;
+      left:50%;
+      transform:translateX(-50%);
+      width:108px;
+      height:30px;
+      background:#000;
+      border-radius:18px;
+      z-index:10;
+      pointer-events:none;
+    }
+    .notch::after {
+      content:'';
+      position:absolute;
+      right:14px;
+      top:10px;
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:#0a0c0e;
+      box-shadow:inset 0 0 2px rgba(255,255,255,0.15);
+    }
+
+    .frame {
+      width:100%;
+      height:100%;
+      border:none;
+      display:block;
+      background:#fff;
+    }
+
+    /* ─── BOTTOM META ─── */
+    .meta-bar {
+      position:fixed;
+      bottom:20px; left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      align-items:center;
+      gap:14px;
+      padding:9px 18px;
+      background:rgba(20,23,26,0.92);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      border:1px solid var(--line-2);
+      font-family:'Titillium Web', sans-serif;
+      font-size:10.5px;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      color:var(--text-mid);
+      z-index:50;
+      white-space:nowrap;
+    }
+    .meta-bar strong {
+      color:var(--text);
+      font-weight:600;
+    }
+    .meta-dot {
+      width:5px; height:5px;
+      border-radius:50%;
+      background:#5fcf80;
+      box-shadow:0 0 6px rgba(95,207,128,0.5);
+    }
+    .meta-sep {
+      width:1px; height:11px;
+      background:var(--line-2);
+    }
+
+    /* ─── ERROR STATE (file:// 환경에서 v1 누락 시) ─── */
+    .frame-error {
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:40px 32px;
+      text-align:center;
+      gap:18px;
+      width:100%;
+      height:100%;
+      background:#fafaf8;
+      color:#1a1a1a;
+      font-family:'Noto Sans KR', sans-serif;
+      position:absolute;
+      inset:0;
+    }
+    .frame-error.visible { display:flex; }
+    .frame-error-icon {
+      width:48px; height:48px;
+      border:1.5px solid #c8c8c4;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .frame-error-icon svg { width:22px; height:22px; stroke:#666; fill:none; stroke-width:1.5; }
+    .frame-error-title {
+      font-size:14px; font-weight:600;
+      letter-spacing:0.3px;
+    }
+    .frame-error-desc {
+      font-size:12px; font-weight:300;
+      color:#666; line-height:1.7;
+      max-width:240px;
+    }
+    .frame-error-code {
+      font-family:'Titillium Web', monospace;
+      font-size:10px;
+      padding:7px 12px;
+      background:#1a1a1a;
+      color:#fafaf8;
+      letter-spacing:0.5px;
+    }
+
+    /* ─── 프리뷰 셸 자체 반응형 ─── */
+    @media (max-width: 900px) {
+      .topbar { padding:0 16px; gap:12px; }
+      .brand-text { display:none; }
+      .stage-inner { padding:24px 16px 80px; }
+      .meta-bar { font-size:9.5px; padding:8px 14px; gap:10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ─── TOP BAR ─── -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="1.5"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">App Preview</span>
+        <span class="brand-sub">GS건설 Renewal · C안 · v1</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="device-list" id="deviceList">
+      <button class="chip" data-w="320" data-h="568" data-name="iPhone SE (1st)">
+        iPhone SE <span class="chip-dim">320×568</span>
+      </button>
+      <button class="chip" data-w="375" data-h="667" data-name="iPhone 8">
+        iPhone 8 <span class="chip-dim">375×667</span>
+      </button>
+      <button class="chip active" data-w="390" data-h="844" data-name="iPhone 14">
+        iPhone 14 <span class="chip-dim">390×844</span>
+      </button>
+      <button class="chip" data-w="393" data-h="852" data-name="iPhone 15 Pro">
+        iPhone 15 Pro <span class="chip-dim">393×852</span>
+      </button>
+      <button class="chip" data-w="430" data-h="932" data-name="iPhone 15 Pro Max">
+        iPhone 15 Pro Max <span class="chip-dim">430×932</span>
+      </button>
+      <button class="chip" data-w="360" data-h="800" data-name="Galaxy S24">
+        Galaxy S24 <span class="chip-dim">360×800</span>
+      </button>
+      <button class="chip" data-w="412" data-h="915" data-name="Pixel 8">
+        Pixel 8 <span class="chip-dim">412×915</span>
+      </button>
+      <button class="chip" data-w="768" data-h="1024" data-name="iPad Mini">
+        iPad Mini <span class="chip-dim">768×1024</span>
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="actions">
+      <button class="iconbtn" id="btnRotate" title="회전 (R 키)" aria-label="회전">
+        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
+      </button>
+      <button class="iconbtn" id="btnReload" title="새로고침 (F5)" aria-label="새로고침">
+        <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+      </button>
+      <button class="iconbtn" id="btnOpen" title="새 탭에서 열기" aria-label="새 탭에서 열기">
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ─── STAGE ─── -->
+  <main class="stage" id="stage">
+    <div class="stage-inner">
+      <div class="device" id="device">
+        <div class="screen" id="screen">
+          <div class="notch"></div>
+          <iframe
+            id="frame"
+            class="frame"
+            src="./gsenc-renewal-app-c-v1.html"
+            title="GS건설 Renewal Mobile Preview"
+            allow="fullscreen"></iframe>
+          <div class="frame-error" id="frameError">
+            <div class="frame-error-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div class="frame-error-title">파일을 불러올 수 없습니다</div>
+            <p class="frame-error-desc">이 프리뷰 파일과 같은 폴더에 v1 HTML 파일이 있어야 합니다. 두 파일을 같은 폴더에 넣고 다시 열어주세요.</p>
+            <code class="frame-error-code">gsenc-renewal-app-c-v1.html</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<!-- ─── BOTTOM META BAR ─── -->
+<div class="meta-bar" id="metaBar">
+  <span class="meta-dot"></span>
+  <span><strong id="mName">iPhone 14</strong></span>
+  <span class="meta-sep"></span>
+  <span id="mSize">390 × 844</span>
+  <span class="meta-sep"></span>
+  <span id="mOrient">Portrait</span>
+  <span class="meta-sep"></span>
+  <span id="mScale">100%</span>
+</div>
+
+<script>
+  /* ──────────────────────────────────────
+     모바일 프리뷰 — Device 시뮬레이터
+  ────────────────────────────────────── */
+
+  const stage      = document.getElementById('stage');
+  const device     = document.getElementById('device');
+  const screen     = document.getElementById('screen');
+  const frame      = document.getElementById('frame');
+  const frameError = document.getElementById('frameError');
+  const deviceList = document.getElementById('deviceList');
+  const chips      = Array.from(deviceList.querySelectorAll('.chip'));
+
+  const btnRotate  = document.getElementById('btnRotate');
+  const btnReload  = document.getElementById('btnReload');
+  const btnOpen    = document.getElementById('btnOpen');
+
+  const mName   = document.getElementById('mName');
+  const mSize   = document.getElementById('mSize');
+  const mOrient = document.getElementById('mOrient');
+  const mScale  = document.getElementById('mScale');
+
+  // 디바이스 상태
+  let state = {
+    w: 390,
+    h: 844,
+    name: 'iPhone 14',
+    landscape: false,
+    scale: 1
+  };
+
+  /* ─── 디바이스 적용 ─── */
+  function applyDevice(){
+    const baseW = state.landscape ? state.h : state.w;
+    const baseH = state.landscape ? state.w : state.h;
+
+    // 디바이스 frame 외곽 여백 (padding 14px + border 3px)
+    const framePad = 14;
+    const outerBorder = 3;
+    const deviceW = baseW + framePad * 2 + outerBorder * 2;
+    const deviceH = baseH + framePad * 2 + outerBorder * 2;
+
+    // stage 가용 영역 계산 → 너무 크면 scale down
+    const stageRect = stage.getBoundingClientRect();
+    const horizPad = 96;
+    const vertPad  = 144; // top/bottom + meta-bar 여유
+    const availW = stageRect.width  - horizPad;
+    const availH = stageRect.height - vertPad;
+
+    let scale = 1;
+    if(deviceW > availW || deviceH > availH){
+      scale = Math.min(availW / deviceW, availH / deviceH);
+      scale = Math.max(0.4, scale);
+    }
+    state.scale = scale;
+
+    // 스크린 크기 = 실제 viewport
+    screen.style.width  = baseW + 'px';
+    screen.style.height = baseH + 'px';
+
+    // scale transform
+    device.style.transform = scale < 1 ? `scale(${scale})` : '';
+    device.style.transformOrigin = 'center center';
+
+    // 메타 업데이트
+    mName.textContent   = state.name;
+    mSize.textContent   = `${baseW} × ${baseH}`;
+    mOrient.textContent = state.landscape ? 'Landscape' : 'Portrait';
+    mScale.textContent  = `${Math.round(scale * 100)}%`;
+  }
+
+  /* ─── 디바이스 칩 클릭 ─── */
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      state.w = parseInt(chip.dataset.w, 10);
+      state.h = parseInt(chip.dataset.h, 10);
+      state.name = chip.dataset.name;
+      applyDevice();
+    });
+  });
+
+  /* ─── 회전 ─── */
+  btnRotate.addEventListener('click', () => {
+    state.landscape = !state.landscape;
+    applyDevice();
+  });
+
+  /* ─── 새로고침 ─── */
+  btnReload.addEventListener('click', () => {
+    btnReload.classList.add('spinning');
+    frame.src = frame.src;
+    setTimeout(() => btnReload.classList.remove('spinning'), 700);
+  });
+
+  /* ─── 새 탭에서 열기 ─── */
+  btnOpen.addEventListener('click', () => {
+    window.open(frame.src, '_blank');
+  });
+
+  /* ─── 키보드 단축키 ─── */
+  document.addEventListener('keydown', e => {
+    if(e.target.matches('input, textarea')) return;
+    if(e.key === 'r' || e.key === 'R'){
+      btnRotate.click();
+    } else if(e.key === 'F5' || ((e.metaKey || e.ctrlKey) && e.key === 'r')){
+      e.preventDefault();
+      btnReload.click();
+    }
+  });
+
+  /* ─── 윈도우 리사이즈 시 재계산 ─── */
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(applyDevice, 80);
+  });
+
+  /* ─── iframe 로드 실패 감지 ─── */
+  frame.addEventListener('error', () => {
+    frameError.classList.add('visible');
+  });
+  frame.addEventListener('load', () => {
+    try {
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      if(doc && doc.body && doc.body.innerHTML.length > 100){
+        frameError.classList.remove('visible');
+      }
+    } catch(err) {
+      // cross-origin 정상 케이스
+    }
+  });
+
+  /* ─── 초기화 ─── */
+  applyDevice();
+</script>
+
+</body>
+</html>
